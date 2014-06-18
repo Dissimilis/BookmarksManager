@@ -18,7 +18,7 @@ namespace BookmarksManager
         /// </summary>
         public IEnumerable<BookmarkLink> AllLinks
         {
-            get { return GetAllIems<BookmarkLink>(this, false); }
+            get { return GetAllIems<BookmarkLink>(this); }
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace BookmarksManager
         /// </summary>
         public IEnumerable<IBookmarkItem> AllItems
         {
-            get { return GetAllIems<IBookmarkItem>(this, true); }
+            get { return GetAllIems<IBookmarkItem>(this); }
         }
 
         /// <summary>
@@ -46,15 +46,15 @@ namespace BookmarksManager
             Title = title;
         }
 
-        private IEnumerable<T> GetAllIems<T>(IEnumerable<IBookmarkItem> folder, bool includeFolders) where T : IBookmarkItem
+        private IEnumerable<T> GetAllIems<T>(IEnumerable<IBookmarkItem> folder) where T : IBookmarkItem
         {
             foreach (var item in folder)
             {
                 if (item is BookmarkFolder)
                 {
-                    if (includeFolders)
+                    if (typeof(T) == typeof(BookmarkFolder) || typeof(T) == typeof(IBookmarkItem))
                         yield return (T)item;
-                    foreach (var innerItem in GetAllIems<T>(item as BookmarkFolder, includeFolders))
+                    foreach (var innerItem in GetAllIems<T>(item as BookmarkFolder))
                     {
                         yield return innerItem;
                     }
