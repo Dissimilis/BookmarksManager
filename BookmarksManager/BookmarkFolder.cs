@@ -34,7 +34,7 @@ namespace BookmarksManager
         /// </summary>
         public IEnumerable<BookmarkFolder> AllFolders
         {
-            get { return AllItems.OfType<BookmarkFolder>(); }
+            get { return this.GetAllItems<BookmarkFolder>(); }
         }
 
         public BookmarkFolder()
