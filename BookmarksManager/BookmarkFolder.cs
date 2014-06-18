@@ -18,7 +18,7 @@ namespace BookmarksManager
         /// </summary>
         public IEnumerable<BookmarkLink> AllLinks
         {
-            get { return GetAllItems<BookmarkLink>(this); }
+            get { return this.GetAllItems<BookmarkLink>(); }
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace BookmarksManager
         /// </summary>
         public IEnumerable<IBookmarkItem> AllItems
         {
-            get { return GetAllItems<IBookmarkItem>(this); }
+            get { return this.GetAllItems<IBookmarkItem>(); }
         }
 
         /// <summary>
@@ -46,34 +46,6 @@ namespace BookmarksManager
             Title = title;
         }
 
-        /// <summary>
-        /// Returns all items of <typeparamref name="T"/> in flat structure 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> GetAllItems<T>() where T : IBookmarkItem
-        {
-            return GetAllItems<T>(this);
-        }
-
-        private IEnumerable<T> GetAllItems<T>(IEnumerable<IBookmarkItem> folder) where T : IBookmarkItem
-        {
-            foreach (var item in folder)
-            {
-                if(typeof(T) == item.GetType() || typeof(T) == typeof(IBookmarkItem))
-                {
-                    yield return (T)item;
-                }
-                var innerFolder = item as IEnumerable<IBookmarkItem>;
-                if (innerFolder != null)
-                {
-                    foreach (var innerItem in GetAllItems<T>(innerFolder))
-                    {
-                        yield return innerItem;
-                    }
-                }
-            }
-        }
 
         public override string ToString()
         {

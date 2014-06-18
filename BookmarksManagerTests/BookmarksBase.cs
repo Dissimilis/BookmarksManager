@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BookmarksManager;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -67,13 +68,54 @@ namespace BookmarksManagerTests
             };
             Assert.AreEqual(7, bookmarks.AllItems.ToList().Count());
             Assert.AreEqual(2, bookmarks.AllLinks.ToList().Count());
-            
         }
+
+        [TestMethod]
+        public void CustomFolderType()
+        {
+            var bookmarks = new BookmarkFolder()
+            {
+                new BookmarkFolder("nonemptyFolder")
+                {
+                    new BookmarkFolder("emptyFolder"),
+                    new BookmarkLink("url", "title2"),
+                    new CustomItem(){Title = "customTitle", Message = "msg"},
+                    new CustomFolder("customFolder","customProperty")
+                    {
+                        new BookmarkLink("url","title3"),
+                        new BookmarkFolder("emptyFolder"),
+                        new CustomItem(){Title = "customTitle", Message = "msg3"}
+                    }
+
+                },
+                new BookmarkFolder("emptyFolder"),
+                new BookmarkLink("url", "title"),
+                new CustomItem(){Title = "customTitle", Message = "msg2"}
+            };
+            Assert.AreEqual(11, bookmarks.AllItems.ToList().Count());
+            Assert.AreEqual(3, bookmarks.AllLinks.ToList().Count());
+            Assert.AreEqual(3, bookmarks.AllFolders.Count(f => f.Title == "emptyFolder"));
+            var customFolders = bookmarks.GetAllItems<CustomFolder>();
+            Assert.IsNotNull(customFolders);
+            Assert.IsTrue(customFolders.Any(c=>c.Count == 3));
+        }
+
 
         class CustomItem : IBookmarkItem
         {
             public string Title { get; set; }
             public string Message { get; set; }
+        }
+        class CustomFolder : List<IBookmarkItem>,IBookmarkItem
+        {
+            public string Title { get; set; }
+            public string CustomProperty { get; set; }
+
+            public CustomFolder(string title, string s)
+            {
+                Title = title;
+                CustomProperty = s;
+            }
         }
 
     }
