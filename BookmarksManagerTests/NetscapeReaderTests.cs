@@ -1,13 +1,10 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using BookmarksManager;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#endregion
 
 namespace BookmarksManagerTests
 {

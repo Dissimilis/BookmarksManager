@@ -1,9 +1,6 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-#endregion
 
 namespace BookmarksManager
 {
