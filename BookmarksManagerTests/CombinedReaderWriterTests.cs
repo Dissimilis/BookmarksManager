@@ -64,7 +64,7 @@ namespace BookmarksManagerTests
             container.Add(new BookmarkLink("test", "ƒ"));
             var ms = new MemoryStream();
             var writter = new NetscapeBookmarksWritter(container) {OutputEncoding = Encoding.Unicode};
-            writter.Write(ms, true);
+            writter.Write(ms);
             ms.Position = 0;
             var reader = new NetscapeBookmarksReader {AutoDetectEncoding = true};
             var readed = reader.Read(ms);

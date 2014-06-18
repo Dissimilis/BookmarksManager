@@ -22,7 +22,7 @@ namespace BookmarksManager
         }
 
         /// <summary>
-        /// All items (links and folders) in flat structure
+        /// All items (links, folders and custom IBookmarkItem objects) in flat structure
         /// </summary>
         public IEnumerable<IBookmarkItem> AllItems
         {

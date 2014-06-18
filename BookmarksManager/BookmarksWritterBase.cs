@@ -24,15 +24,16 @@ namespace BookmarksManager
         /// <summary>
         ///     Writes bookmarks to specified output stream using OutputEncoding
         /// </summary>
-        /// <param name="outputStream">Writeable output stream</param>
-        /// <param name="leaveOpen">Leave stream open after writting</param>
-        public virtual void Write(Stream outputStream, bool leaveOpen = false)
+        /// <param name="outputStream">Writeable output stream; It will be automatically closed, you must owerride this method to prevent this</param>
+        public virtual void Write(Stream outputStream)
         {
-            using (var writer = new StreamWriter(outputStream, OutputEncoding, 4096, leaveOpen))
+            using (var writer = new StreamWriter(outputStream, OutputEncoding))
             {
                 Write(writer);
             }
         }
+
+
 
         public override string ToString()
         {
