@@ -16,12 +16,15 @@ foreach (var b in bookmarks.AllLinks)
 }
 
 //Read bookmarks from file
-var reader = new NetscapeBookmarksReader;
-//supports encoding detection when reading from stream
-var bookmarks = reader.Read(file);
-foreach (var b in bookmarks.AllLinks.Where(l=>l.LastVisit < DateTime.Today))
+using (var file = File.OpenRead("path_to_file"))
 {
-  Console.WriteLine("Type {0}, Title: {1}", b.GetType().Name, b.Title);
+  var reader = new NetscapeBookmarksReader;
+  //supports encoding detection when reading from stream
+  var bookmarks = reader.Read(file);
+  foreach (var b in bookmarks.AllLinks.Where(l=>l.LastVisit < DateTime.Today))
+  {
+    Console.WriteLine("Type {0}, Title: {1}", b.GetType().Name, b.Title);
+  }
 }
 
 
