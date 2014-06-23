@@ -10,15 +10,29 @@ namespace BookmarksManagerTests
     [TestClass]
     public class CombinedReaderWriterTests
     {
+
+        private StringBuilder _stringBuilder = new StringBuilder();
+
+
+        private string Write(BookmarkFolder bookmarks, Encoding encoding = null)
+        {
+            var sb = new StringBuilder();
+            var writter = NetscapeBookmarksWritter.Create(sb, encoding);
+            writter.Write(bookmarks);
+            return sb.ToString();
+        }
+
+
         [TestMethod]
         public void EmptyContainer()
         {
+            _stringBuilder.Clear();
             var emptyContainer = new BookmarkFolder();
-            var writter = new NetscapeBookmarksWritter(emptyContainer);
+            var writter = NetscapeBookmarksWritter.Create(_stringBuilder);
             var reader = new NetscapeBookmarksReader();
-            var write1 = writter.ToString();
-            var readed = reader.Read(write1);
-            writter = new NetscapeBookmarksWritter(readed);
+            writter.Write(emptyContainer);
+            var readed = reader.Read(_stringBuilder.ToString());
+            writter = NetscapeBookmarksWritter.Create();
             var write2 = writter.ToString();
             Assert.AreEqual(write1, write2, true);
         }
@@ -36,8 +50,8 @@ namespace BookmarksManagerTests
             var write1 = writter.ToString();
             var readed = reader.Read(write1);
             Assert.AreEqual("1", readed.AllLinks.First().Attributes["custom"]);
-            Assert.AreEqual("2", readed.AllFolders.First().Attributes["custom"]);
-            Assert.IsFalse(readed.AllFolders.First().Attributes.ContainsKey("add_date"), "add_date is ignored attribute, it must not be written");
+            Assert.AreEqual("2", readed.GetAllItems<BookmarkFolder>().First().Attributes["custom"]);
+            Assert.IsFalse(readed.GetAllItems<BookmarkFolder>().First().Attributes.ContainsKey("add_date"), "add_date is ignored attribute, it must not be written");
         }
 
         [TestMethod]
@@ -65,7 +79,7 @@ namespace BookmarksManagerTests
             var ms = new MemoryStream();
             var writter = new NetscapeBookmarksWritter(container) {OutputEncoding = Encoding.Unicode};
             writter.Write(ms);
-            ms.Position = 0;
+            ms = new MemoryStream(ms.GetBuffer());
             var reader = new NetscapeBookmarksReader {AutoDetectEncoding = true};
             var readed = reader.Read(ms);
             Assert.AreEqual(container.AllItems.Last().Title, readed.AllItems.Last().Title);

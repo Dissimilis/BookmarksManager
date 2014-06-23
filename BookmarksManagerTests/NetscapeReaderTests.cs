@@ -181,7 +181,7 @@ namespace BookmarksManagerTests
             var container = reader.Read(html);
             var ff = container.FirefoxBookmarksBar();
             Assert.IsNotNull(ff, "Firefox bookmarks toolbar was not found");
-            Assert.AreEqual("test", ff[0].Title, "Firefox bookmarks toolbar was not found");
+            Assert.AreEqual("test", ff.First().Title, "Firefox bookmarks toolbar was not found");
         }
 
         [TestMethod]

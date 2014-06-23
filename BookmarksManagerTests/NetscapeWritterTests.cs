@@ -26,7 +26,7 @@ namespace BookmarksManagerTests
         public NetscapeWritterTests()
         {
             var emptyContainer = new BookmarkFolder();
-            _writter = new NetscapeBookmarksWritter(emptyContainer);
+            _writter = new NetscapeBookmarksWritter();
         }
 
         [TestMethod]

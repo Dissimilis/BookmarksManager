@@ -1,48 +1,37 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace BookmarksManager
 {
-    public abstract class BookmarksWritterBase<T> where T : class, new()
+    public abstract class BookmarksFileWritterBase<T> : IBookmarksWritter, IDisposable  where T : class
     {
-        protected T BookmarksContainer { get; set; }
+        //protected T BookmarksContainer { get; set; }
         public Encoding OutputEncoding { get; set; }
+        protected TextWriter Writter { get; set; }
 
-
-        protected BookmarksWritterBase(T bookmarksContainer)
+        protected BookmarksFileWritterBase(TextWriter writter)
         {
             OutputEncoding = Encoding.UTF8;
-            BookmarksContainer = bookmarksContainer;
+            this.Writter = writter;
         }
 
         /// <summary>
-        ///     Writes bookmarks to provided TextWritter. BookmarksWritter output encoding is not used in this method, you must
-        ///     create TextWritter with correct encoding
+        /// Writes bookmarks to specified output
         /// </summary>
-        protected abstract void Write(TextWriter outputTextWritter);
-
-        /// <summary>
-        ///     Writes bookmarks to specified output stream using OutputEncoding
-        /// </summary>
-        /// <param name="outputStream">Writeable output stream; It will be automatically closed, you must owerride this method to prevent this</param>
-        public virtual void Write(Stream outputStream)
+        /// <param name="bookmarksContainer">Bookmarks to write</param>
+        public void Write(IBookmarkFolder bookmarksContainer)
         {
-            using (var writer = new StreamWriter(outputStream, OutputEncoding))
-            {
-                Write(writer);
-            }
+            Write(Writter, bookmarksContainer);
         }
 
+        protected abstract void Write(TextWriter writter, IBookmarkFolder bookmarksContainer);
 
 
-        public override string ToString()
+        public virtual void Dispose()
         {
-            var sb = new StringBuilder();
-            using (var writter = new StringWriter(sb))
-            {
-                Write(writter);
-                return sb.ToString();
-            }
+            if (Writter != null)
+                Writter.Dispose();
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 
 namespace BookmarksManager
@@ -11,7 +12,7 @@ namespace BookmarksManager
     ///     Netscape bookmarks format is defacto standard for importing/exporting bookmarks from browsers
     ///     Format is described here: http://msdn.microsoft.com/en-us/library/aa753582%28v=vs.85%29.aspx
     /// </summary>
-    public class NetscapeBookmarksWritter : BookmarksWritterBase<BookmarkFolder>
+    public class NetscapeBookmarksWritter : BookmarksFileWritterBase<IBookmarkFolder>
     {
         protected string NetscapeBookmarksFileHead = @"<!DOCTYPE NETSCAPE-Bookmark-file-1>
     <!--This is an automatically generated file.
@@ -22,15 +23,34 @@ namespace BookmarksManager
     <H1>Bookmarks</H1>";
 
         public const string Identation = "    ";
-        public static readonly string[] IgnoredAttributes = {"last_modified", "icon", "icon_uri", "href", "last_visit", "add_date"};
+        public static string[] IgnoredAttributes = {"last_modified", "icon", "icon_uri", "href", "last_visit", "add_date"};
 
 
-        public NetscapeBookmarksWritter(BookmarkFolder bookmarksContainer)
-            : base(bookmarksContainer)
+        private NetscapeBookmarksWritter(TextWriter writter) : base(writter)
         {
+          
         }
 
-        protected override void Write(TextWriter outputTextWritter)
+        public static NetscapeBookmarksWritter Create(TextWriter writter, Encoding encoding = null)
+        {
+            return new NetscapeBookmarksWritter(writter){OutputEncoding = encoding??Encoding.UTF8};
+        }
+
+        /// <param name="outputStream">Writeable output stream; It will be automatically closed, you must owerride this method to prevent this</param>
+        /// <param name="encoding">Encoding for writting to stream</param>
+        public static NetscapeBookmarksWritter Create(Stream outputStream, Encoding encoding = null)
+        {
+            var sw = new StreamWriter(outputStream, encoding??Encoding.UTF8);
+            return Create(sw, encoding);
+        }
+
+        public static NetscapeBookmarksWritter Create(StringBuilder stringBuilder, Encoding encoding = null)
+        {
+            var sw = new StringWriter(stringBuilder);
+            return Create(sw, encoding);
+        }
+
+        protected override void Write(TextWriter outputTextWritter, IBookmarkFolder bookmarks)
         {
             if (outputTextWritter == null)
                 throw new ArgumentNullException("outputTextWritter");
@@ -38,33 +58,36 @@ namespace BookmarksManager
             outputTextWritter.WriteLine();
             using (var writter = XmlWriter.Create(outputTextWritter, new XmlWriterSettings {ConformanceLevel = ConformanceLevel.Fragment, Indent = false, Encoding = OutputEncoding}))
             {
-                WriteFolderItems(BookmarksContainer, outputTextWritter, writter, 0);
+                WriteFolderItems(bookmarks, outputTextWritter, writter, 0);
             }
         }
 
-        private void WriteFolderItems(IEnumerable<IBookmarkItem> folder, TextWriter writter, XmlWriter xmlWritter, int iteration)
+
+        protected virtual void WriteFolderItems(IEnumerable<IBookmarkItem> folder, TextWriter writter, XmlWriter xmlWritter, int iteration)
         {
             WriteIdentation(iteration, writter);
             writter.WriteLine("<DL><p>");
             foreach (var item in folder)
             {
-                if (item is BookmarkFolder)
+                BookmarkFolder innerFolder;
+                BookmarkLink innerLink;
+                if ((innerFolder = item as BookmarkFolder) != null)
                 {
                     WriteIdentation(iteration, writter);
-                    WriteFolderLine(item as BookmarkFolder, writter, xmlWritter);
-                    WriteFolderItems(item as BookmarkFolder, writter, xmlWritter, iteration + 1);
+                    WriteFolderLine(innerFolder, writter, xmlWritter);
+                    WriteFolderItems(innerFolder, writter, xmlWritter, iteration + 1);
                 }
-                else if (item is BookmarkLink)
+                else if ((innerLink = item as BookmarkLink) != null)
                 {
                     WriteIdentation(iteration, writter);
-                    WriteLinkLine(item as BookmarkLink, writter, xmlWritter);
+                    WriteLinkLine(innerLink, writter, xmlWritter);
                 }
             }
             WriteIdentation(iteration, writter);
             writter.WriteLine("</DL><p>");
         }
 
-        private void WriteLinkLine(BookmarkLink link, TextWriter writter, XmlWriter xmlWritter)
+        protected virtual void WriteLinkLine(BookmarkLink link, TextWriter writter, XmlWriter xmlWritter)
         {
             writter.Write("<DT>");
             xmlWritter.WriteStartElement("A");
@@ -95,14 +118,14 @@ namespace BookmarksManager
             writter.WriteLine();
         }
 
-        private void WriteEmbededIcon(BookmarkLink link, XmlWriter xmlWritter)
+        protected virtual void WriteEmbededIcon(BookmarkLink link, XmlWriter xmlWritter)
         {
             const string template = "data:{0};base64,{1}";
             var base64Content = Convert.ToBase64String(link.IconData);
             xmlWritter.WriteAttributeString("ICON", string.Format(template, link.IconContentType, base64Content));
         }
 
-        private void WriteFolderLine(BookmarkFolder folder, TextWriter writter, XmlWriter xmlWritter)
+        protected virtual void WriteFolderLine(BookmarkFolder folder, TextWriter writter, XmlWriter xmlWritter)
         {
             writter.Write("<DT>");
             xmlWritter.WriteStartElement("H3");
@@ -118,7 +141,7 @@ namespace BookmarksManager
             writter.WriteLine();
         }
 
-        private void WriteCustomAttributes(IDictionary<string, string> attributes, XmlWriter xmlWritter)
+        protected virtual void WriteCustomAttributes(IDictionary<string, string> attributes, XmlWriter xmlWritter)
         {
             foreach (var attr in attributes.Keys.Except(IgnoredAttributes, StringComparer.OrdinalIgnoreCase))
             {
@@ -126,7 +149,7 @@ namespace BookmarksManager
             }
         }
 
-        private void WriteIdentation(int iteration, TextWriter writter)
+        protected virtual void WriteIdentation(int iteration, TextWriter writter)
         {
             for (var i = 0; i < iteration; i++)
                 writter.Write(Identation);

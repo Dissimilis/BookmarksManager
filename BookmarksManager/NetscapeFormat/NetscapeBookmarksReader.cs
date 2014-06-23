@@ -12,7 +12,7 @@ namespace BookmarksManager
     ///     Netscape bookmarks format is defacto standard for importing/exporting bookmarks from browsers
     ///     Format is described here: http://msdn.microsoft.com/en-us/library/aa753582%28v=vs.85%29.aspx
     /// </summary>
-    public class NetscapeBookmarksReader : BookmarksReaderBase<BookmarkFolder>
+    public class NetscapeBookmarksReader : BookmarksFileReaderBase<BookmarkFolder>
     {
         /// <summary>
         ///     Length of the file header for encoding detection (in chars, not bytes).
@@ -52,11 +52,17 @@ namespace BookmarksManager
             return Encoding.UTF8;
         }
 
-        public NetscapeBookmarksReader()
+        private NetscapeBookmarksReader()
         {
             HeaderLength = 512;
             AutoDetectEncoding = true;
         }
+
+        public NetscapeBookmarksReader Create()
+        {
+            
+        }
+
 
         /// <summary>
         ///     Creates bookmarks container from string
@@ -223,6 +229,9 @@ namespace BookmarksManager
                         break;
                     case "icon_uri":
                         link.IconUrl = attr.Value;
+                        break;
+                    case "feedurl":
+                        link.FeedUrl = attr.Value;
                         break;
                 }
                 if (!link.Attributes.ContainsKey(attr.Key))

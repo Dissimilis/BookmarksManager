@@ -85,19 +85,23 @@ namespace BookmarksManagerTests
                         new BookmarkLink("url","title3"),
                         new BookmarkFolder("emptyFolder"),
                         new CustomItem(){Title = "customTitle", Message = "msg3"}
-                    }
+                    },
+                    new CustomFolder2(){CustomTitle = "custom"}
 
                 },
                 new BookmarkFolder("emptyFolder"),
                 new BookmarkLink("url", "title"),
-                new CustomItem(){Title = "customTitle", Message = "msg2"}
+                
             };
-            Assert.AreEqual(11, bookmarks.AllItems.ToList().Count());
+            bookmarks.Add(new CustomItem() {Title = "customTitle", Message = "msg2"});
+            Assert.AreEqual(12, bookmarks.AllItems.ToList().Count());
+            
             Assert.AreEqual(3, bookmarks.AllLinks.ToList().Count());
             Assert.AreEqual(3, bookmarks.AllFolders.Count(f => f.Title == "emptyFolder"));
             var customFolders = bookmarks.GetAllItems<CustomFolder>();
             Assert.IsNotNull(customFolders);
             Assert.IsTrue(customFolders.Any(c=>c.Count == 3));
+            Assert.AreEqual(1,bookmarks.GetAllItems<CustomFolder2>().Count(c => c.CustomTitle == "custom"));
         }
 
 
@@ -116,6 +120,12 @@ namespace BookmarksManagerTests
                 Title = title;
                 CustomProperty = s;
             }
+        }
+
+        class CustomFolder2 : BookmarkFolder
+        {
+            public string CustomTitle { get; set; }
+            
         }
 
     }

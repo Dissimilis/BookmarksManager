@@ -4,10 +4,15 @@ using System.Collections.Generic;
 
 namespace BookmarksManager
 {
-    public class BookmarkLink : IBookmarkItem
+    public class BookmarkLink : IBookmarkLink
     {
         public string Title { get; set; }
         public string Url { get; set; }
+
+        /// <summary>
+        /// URL of RSS feed
+        /// </summary>
+        public string FeedUrl { get; set; }
 
         /// <summary>
         ///     favicon URL

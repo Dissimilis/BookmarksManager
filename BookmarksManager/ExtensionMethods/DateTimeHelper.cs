@@ -2,16 +2,24 @@ using System;
 
 namespace BookmarksManager
 {
-    internal static class DateTimeHelper
+    public static class DateTimeHelper
     {
         public static int ToUnixTimestamp(this DateTime time)
         {
             return (Int32) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
 
-        public static DateTime FromUnixTimeStamp(int unixTimeStamp)
+        public static DateTime? FromUnixTimeStamp(long? unixTimeStamp)
         {
-            return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime();
+            if (!unixTimeStamp.HasValue)
+                return null;
+            if (unixTimeStamp > 99999999999)
+            {
+                if (unixTimeStamp > 99999999999999) //microseconds
+                    unixTimeStamp = unixTimeStamp/1000;
+                return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds((double)unixTimeStamp).ToLocalTime();
+            }
+            return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds((double)unixTimeStamp).ToLocalTime();
         }
 
         public static DateTime? FromUnixTimeStamp(string unixTimeStamp)

@@ -175,3 +175,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+BookmarksManager.Firefox/x*

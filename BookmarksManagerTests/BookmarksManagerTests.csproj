@@ -56,8 +56,14 @@
     <Compile Include="NetscapeWritterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CombinedReaderWriterTests.cs" />
+    <Compile Include="BookmarksReaderFirefoxTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookmarksManager.Firefox\BookmarksManager.Firefox.csproj">
+      <Project>{dfe91bf7-d224-4ab8-a6c4-dd93073d530a}</Project>
+      <Name>BookmarksManager.Firefox</Name>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\BookmarksManager\BookmarksManager.csproj">
       <Project>{91a7837e-81ca-470a-bb73-0126e110818b}</Project>
       <Name>BookmarksManager</Name>
