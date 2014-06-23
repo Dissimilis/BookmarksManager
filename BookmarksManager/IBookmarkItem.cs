@@ -20,7 +20,7 @@ namespace BookmarksManager
         IEnumerable<IBookmarkFolder> AllFolders { get; }
         void Add(IBookmarkItem item);
 
-        IEnumerable<T> GetAllItems<T>() where T : IBookmarkItem;
+        IEnumerable<T> GetAllItems<T>() where T : class, IBookmarkItem;
 
     }
 }

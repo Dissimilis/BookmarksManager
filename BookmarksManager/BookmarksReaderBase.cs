@@ -3,15 +3,16 @@ using System.Text;
 
 namespace BookmarksManager
 {
-    public abstract class BookmarksFileReaderBase<T> : IBookmarksReader where T : class
+    public abstract class BookmarksReaderBase<T> where T : class, new()
     {
         public Encoding InputEncoding { get; set; }
 
-        protected BookmarksFileReaderBase()
+        protected BookmarksReaderBase()
         {
             InputEncoding = Encoding.UTF8;
         }
-        
+
+
         /// <summary>
         ///     Reads bookmarks from stream using provided encoding
         /// </summary>
@@ -30,19 +31,5 @@ namespace BookmarksManager
         /// </summary>
         /// <returns>Bookmarks container</returns>
         public abstract T Read(string inputString);
-
-        public IBookmarkFolder Read()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public interface IBookmarksReader
-    {
-        IBookmarkFolder Read();
-    }
-    public interface IBookmarksWritter
-    {
-        void Write(IBookmarkFolder bookmarksContainer);
     }
 }

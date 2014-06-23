@@ -69,17 +69,18 @@ namespace BookmarksManager
         /// </summary>
         /// <typeparam name="T">Specifies what type of items to return</typeparam>
         /// <returns>Flattened list of <typeparamref name="T"/> items</returns>
-        public virtual IEnumerable<T> GetAllItems<T>() where T : IBookmarkItem
+        public virtual IEnumerable<T> GetAllItems<T>() where T : class,IBookmarkItem
         {
             return this.GetAllItems<T>(this);
         }
 
 
-        private IEnumerable<T> GetAllItems<T>(IBookmarkFolder folder) where T : IBookmarkItem
+        private IEnumerable<T> GetAllItems<T>(IBookmarkFolder folder) where T : class,IBookmarkItem
         {
             foreach (var item in folder)
             {
-                if (typeof(T) == item.GetType() || typeof(T) == typeof(IBookmarkItem))
+                var returnItem = item as T;
+                if (returnItem != null)
                 {
                     yield return (T)item;
                 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace BookmarksManager
@@ -12,7 +11,7 @@ namespace BookmarksManager
     ///     Netscape bookmarks format is defacto standard for importing/exporting bookmarks from browsers
     ///     Format is described here: http://msdn.microsoft.com/en-us/library/aa753582%28v=vs.85%29.aspx
     /// </summary>
-    public class NetscapeBookmarksWritter : BookmarksFileWritterBase<IBookmarkFolder>
+    public class NetscapeBookmarksWritter : BookmarksWritterBase<BookmarkFolder>
     {
         protected string NetscapeBookmarksFileHead = @"<!DOCTYPE NETSCAPE-Bookmark-file-1>
     <!--This is an automatically generated file.
@@ -23,34 +22,15 @@ namespace BookmarksManager
     <H1>Bookmarks</H1>";
 
         public const string Identation = "    ";
-        public static string[] IgnoredAttributes = {"last_modified", "icon", "icon_uri", "href", "last_visit", "add_date"};
+        public static readonly string[] IgnoredAttributes = {"last_modified", "icon", "icon_uri", "href", "last_visit", "add_date", "feedurl"};
 
 
-        private NetscapeBookmarksWritter(TextWriter writter) : base(writter)
+        public NetscapeBookmarksWritter(BookmarkFolder bookmarksContainer)
+            : base(bookmarksContainer)
         {
-          
         }
 
-        public static NetscapeBookmarksWritter Create(TextWriter writter, Encoding encoding = null)
-        {
-            return new NetscapeBookmarksWritter(writter){OutputEncoding = encoding??Encoding.UTF8};
-        }
-
-        /// <param name="outputStream">Writeable output stream; It will be automatically closed, you must owerride this method to prevent this</param>
-        /// <param name="encoding">Encoding for writting to stream</param>
-        public static NetscapeBookmarksWritter Create(Stream outputStream, Encoding encoding = null)
-        {
-            var sw = new StreamWriter(outputStream, encoding??Encoding.UTF8);
-            return Create(sw, encoding);
-        }
-
-        public static NetscapeBookmarksWritter Create(StringBuilder stringBuilder, Encoding encoding = null)
-        {
-            var sw = new StringWriter(stringBuilder);
-            return Create(sw, encoding);
-        }
-
-        protected override void Write(TextWriter outputTextWritter, IBookmarkFolder bookmarks)
+        protected override void Write(TextWriter outputTextWritter)
         {
             if (outputTextWritter == null)
                 throw new ArgumentNullException("outputTextWritter");
@@ -58,10 +38,9 @@ namespace BookmarksManager
             outputTextWritter.WriteLine();
             using (var writter = XmlWriter.Create(outputTextWritter, new XmlWriterSettings {ConformanceLevel = ConformanceLevel.Fragment, Indent = false, Encoding = OutputEncoding}))
             {
-                WriteFolderItems(bookmarks, outputTextWritter, writter, 0);
+                WriteFolderItems(BookmarksContainer, outputTextWritter, writter, 0);
             }
         }
-
 
         protected virtual void WriteFolderItems(IEnumerable<IBookmarkItem> folder, TextWriter writter, XmlWriter xmlWritter, int iteration)
         {
@@ -101,6 +80,8 @@ namespace BookmarksManager
                 xmlWritter.WriteAttributeString("ICON_URI", link.IconUrl);
             if (!string.IsNullOrEmpty(link.IconContentType) && link.IconData != null)
                 WriteEmbededIcon(link, xmlWritter);
+            if (!string.IsNullOrEmpty(link.FeedUrl))
+                xmlWritter.WriteAttributeString("FEEDURL", link.FeedUrl);
             xmlWritter.WriteAttributeString("HREF", link.Url);
             if (link.Attributes != null && link.Attributes.Any())
                 WriteCustomAttributes(link.Attributes, xmlWritter);

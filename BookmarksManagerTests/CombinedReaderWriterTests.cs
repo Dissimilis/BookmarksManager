@@ -10,29 +10,15 @@ namespace BookmarksManagerTests
     [TestClass]
     public class CombinedReaderWriterTests
     {
-
-        private StringBuilder _stringBuilder = new StringBuilder();
-
-
-        private string Write(BookmarkFolder bookmarks, Encoding encoding = null)
-        {
-            var sb = new StringBuilder();
-            var writter = NetscapeBookmarksWritter.Create(sb, encoding);
-            writter.Write(bookmarks);
-            return sb.ToString();
-        }
-
-
         [TestMethod]
         public void EmptyContainer()
         {
-            _stringBuilder.Clear();
             var emptyContainer = new BookmarkFolder();
-            var writter = NetscapeBookmarksWritter.Create(_stringBuilder);
+            var writter = new NetscapeBookmarksWritter(emptyContainer);
             var reader = new NetscapeBookmarksReader();
-            writter.Write(emptyContainer);
-            var readed = reader.Read(_stringBuilder.ToString());
-            writter = NetscapeBookmarksWritter.Create();
+            var write1 = writter.ToString();
+            var readed = reader.Read(write1);
+            writter = new NetscapeBookmarksWritter(readed);
             var write2 = writter.ToString();
             Assert.AreEqual(write1, write2, true);
         }
@@ -77,10 +63,10 @@ namespace BookmarksManagerTests
             var container = Helpers.GetSimpleStructure();
             container.Add(new BookmarkLink("test", "ƒ"));
             var ms = new MemoryStream();
-            var writter = new NetscapeBookmarksWritter(container) {OutputEncoding = Encoding.Unicode};
+            var writter = new NetscapeBookmarksWritter(container) { OutputEncoding = Encoding.Unicode };
             writter.Write(ms);
             ms = new MemoryStream(ms.GetBuffer());
-            var reader = new NetscapeBookmarksReader {AutoDetectEncoding = true};
+            var reader = new NetscapeBookmarksReader { AutoDetectEncoding = true };
             var readed = reader.Read(ms);
             Assert.AreEqual(container.AllItems.Last().Title, readed.AllItems.Last().Title);
         }

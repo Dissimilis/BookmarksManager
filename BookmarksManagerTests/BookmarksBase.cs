@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BookmarksManager;
@@ -110,7 +111,7 @@ namespace BookmarksManagerTests
             public string Title { get; set; }
             public string Message { get; set; }
         }
-        class CustomFolder : List<IBookmarkItem>,IBookmarkItem
+        class CustomFolder : List<IBookmarkItem>, IBookmarkFolder
         {
             public string Title { get; set; }
             public string CustomProperty { get; set; }
@@ -119,6 +120,13 @@ namespace BookmarksManagerTests
             {
                 Title = title;
                 CustomProperty = s;
+            }
+
+            public IEnumerable<IBookmarkItem> AllItems { get; private set; }
+            public IEnumerable<IBookmarkFolder> AllFolders { get; private set; }
+            public IEnumerable<T> GetAllItems<T>() where T : class, IBookmarkItem
+            {
+                throw new NotImplementedException();
             }
         }
 
