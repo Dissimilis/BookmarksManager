@@ -2,6 +2,7 @@ BookmarksManager
 =============
 
 Create and read Netscape bookmark file format (Firefox, IE, etc.)
+Read Firefox internal bookmarks database (places.sql)
 
 License: MIT license
 
