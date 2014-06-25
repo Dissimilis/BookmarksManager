@@ -43,6 +43,8 @@
     <Compile Include="BookmarksReaderBase.cs" />
     <Compile Include="BookmarksWritterBase.cs" />
     <Compile Include="ExtensionMethods\DateTimeHelper.cs" />
+    <Compile Include="IBookmarkFolder.cs" />
+    <Compile Include="IBookmarkLink.cs" />
     <Compile Include="NetscapeFormat\HTMLparser.cs" />
     <Compile Include="IBookmarkItem.cs" />
     <Compile Include="NetscapeFormat\NetscapeBookmarksReader.cs" />

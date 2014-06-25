@@ -179,7 +179,7 @@ namespace BookmarksManagerTests
             var html = string.Format(HtmlTemplate, "<DT><H3 personal_toolbar_folder='true'><DL><DT><a href='#'>test</a></DL>", string.Empty);
             var reader = new NetscapeBookmarksReader();
             var container = reader.Read(html);
-            var ff = container.FirefoxBookmarksBar();
+            var ff = container.GetBookmarksBar();
             Assert.IsNotNull(ff, "Firefox bookmarks toolbar was not found");
             Assert.AreEqual("test", ff.First().Title, "Firefox bookmarks toolbar was not found");
         }

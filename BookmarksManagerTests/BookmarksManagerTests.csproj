@@ -57,6 +57,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CombinedReaderWriterTests.cs" />
     <Compile Include="BookmarksReaderFirefoxTests.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BookmarksManager.Firefox\BookmarksManager.Firefox.csproj">
@@ -68,6 +73,19 @@
       <Project>{91a7837e-81ca-470a-bb73-0126e110818b}</Project>
       <Name>BookmarksManager</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TestData\ff30_places.sqlite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ff3_places.sqlite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -7,11 +7,11 @@ namespace BookmarksManager
     public static class BookmarksHelpers
     {
         /// <summary>
-        ///     Finds forefox bookmarks bar in bookmarks container
+        ///     Finds forefox/chrome bookmarks bar in bookmarks container
         /// </summary>
         /// <param name="root"></param>
         /// <returns></returns>
-        public static IBookmarkFolder FirefoxBookmarksBar(this BookmarkFolder root)
+        public static IBookmarkFolder GetBookmarksBar(this BookmarkFolder root)
         {
             //PERSONAL_TOOLBAR_FOLDER
             if (root == null)

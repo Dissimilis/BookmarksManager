@@ -33,8 +33,6 @@ namespace BookmarksManager
             }
         }
 
-
-
         public override string ToString()
         {
             var sb = new StringBuilder();

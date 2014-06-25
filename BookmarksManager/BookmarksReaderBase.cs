@@ -12,7 +12,6 @@ namespace BookmarksManager
             InputEncoding = Encoding.UTF8;
         }
 
-
         /// <summary>
         ///     Reads bookmarks from stream using provided encoding
         /// </summary>

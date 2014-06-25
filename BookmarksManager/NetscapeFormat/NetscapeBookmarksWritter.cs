@@ -81,7 +81,10 @@ namespace BookmarksManager
             if (!string.IsNullOrEmpty(link.IconContentType) && link.IconData != null)
                 WriteEmbededIcon(link, xmlWritter);
             if (!string.IsNullOrEmpty(link.FeedUrl))
+            {
+                xmlWritter.WriteAttributeString("FEED", "true");
                 xmlWritter.WriteAttributeString("FEEDURL", link.FeedUrl);
+            }
             xmlWritter.WriteAttributeString("HREF", link.Url);
             if (link.Attributes != null && link.Attributes.Any())
                 WriteCustomAttributes(link.Attributes, xmlWritter);

@@ -12,6 +12,10 @@ namespace BookmarksManager.Firefox
     public class FirefoxBookmarksReader
     {
 
+        /// <summary>
+        /// If true, includes non user created bookmarks; Default is false
+        /// </summary>
+        public bool IncludeInternal { get; set; }
         public string FilePath { get; private set; }
 
 
@@ -21,10 +25,14 @@ namespace BookmarksManager.Firefox
             from moz_bookmarks b 
             left join moz_places p on b.fk = p.id
             left join moz_favicons f on f.id = p.favicon_id
-            where Coalesce(p.hidden,0) != 1 and b.id > 0 and b.type > 0 and b.parent is not null
+            where b.id > 0 and b.type > 0 and b.parent is not null
             order by parent,position";
 
-        private const string ColumnsToSelect = "b.id,b.parent,b.type,b.position,b.title,b.dateadded,b.lastmodified,p.url,p.visit_count, f.url as favicon_url, f.data as favicon_data, f.mime_type as favicon_type";
+        private const string AttributesSelectStatement = @"select a.id, a.item_id, a.anno_attribute_id,a.content,aa.name
+            from moz_items_annos a
+            left join moz_anno_attributes aa on aa.id = a.anno_attribute_id";
+
+        private const string ColumnsToSelect = "b.id,b.parent,b.type,b.position,b.title,b.dateadded,b.lastmodified,p.url,p.visit_count,p.hidden, f.url as favicon_url, f.data as favicon_data, f.mime_type as favicon_type";
         private const string ConnectionStringTemplate = "Data source={0};";
         private readonly IDictionary<string, HashSet<string>> _dbColumnInfo = new Dictionary<string, HashSet<string>>();
         private readonly IDictionary<string, int> _roots = new Dictionary<string, int>();
@@ -37,6 +45,7 @@ namespace BookmarksManager.Firefox
             if (!File.Exists(filePath))
                 throw new InvalidOperationException("File does not exist ["+filePath+"]");
             FilePath = filePath;
+            IncludeInternal = false;
         }
 
         /// <summary>
@@ -49,42 +58,80 @@ namespace BookmarksManager.Firefox
             {
                 connection.Open();
                 FillBookmarksRoots(connection);
-                var hasLastVisitedColumn = HasColumn(connection, "moz_bookmarks", "last_visit_date");
-                var columnsToSelect = hasLastVisitedColumn ? ColumnsToSelect + ", p.last_visit_date" : ColumnsToSelect;
 
-                var cmd = new SQLiteCommand(string.Format(BookmarksSelectStatementTemplate, columnsToSelect), connection);
-                dynamic reader = new DynamicReader(cmd.ExecuteReader());
-                var rows = new List<BookmarkRow>();
-                while (reader.Read())
-                {
-                    rows.Add(new BookmarkRow()
-                    {
-                        Id = reader.id,
-                        Parent = reader.parent,
-                        Type = reader.type,
-                        Position = reader.position,
-                        Title = reader.title,
-                        Url = reader.url,
-                        LastModified = reader.lastmodified,
-                        DateAdded = reader.dateadded,
-                        LastVisit = reader.last_visit_date,
-                        VisitCount = reader.visit_count,
-                        FaviconUrl = reader.favicon_url,
-                        FaviconData = reader.favicon_data,
-                        FaviconContentType = reader.favicon_type,
-                    });
+                var rows = GetBookmarksRows(connection);
+                AssignAttributesToRows(GetBookmarksAttributes(connection), rows);
 
-                }
                 return ConvertRowsToBookmarksContainer(rows);
             }
             
+        }
+
+        private void AssignAttributesToRows(IEnumerable<FirefoxBookmarkAttribute> attributes, ICollection<FirefoxBookmarkRow> rows)
+        {
+            foreach (var attr in attributes.GroupBy(a=>a.BookmarkId))
+            {
+                var bookmark = rows.FirstOrDefault(r => r.Id == attr.Key);
+                if (bookmark != null)
+                {
+                    bookmark.Attributes = attr.ToList();
+                }
+            }
+        }
+
+        protected virtual IEnumerable<FirefoxBookmarkAttribute> GetBookmarksAttributes(SQLiteConnection connection)
+        {
+            var cmd = new SQLiteCommand(AttributesSelectStatement, connection);
+            dynamic reader = new DynamicReader(cmd.ExecuteReader());
+            var attrs = new List<FirefoxBookmarkAttribute>();
+            while (reader.Read())
+            {
+                attrs.Add(new FirefoxBookmarkAttribute()
+                {
+                    BookmarkId = reader.item_id,
+                    AttributeName = reader.name,
+                    AttributeValue = reader.content
+                });
+            }
+            return attrs;
+        }
+
+        protected virtual List<FirefoxBookmarkRow> GetBookmarksRows(SQLiteConnection connection)
+        {
+            var hasLastVisitedColumn = HasColumn(connection, "moz_bookmarks", "last_visit_date");
+            var columnsToSelect = hasLastVisitedColumn ? ColumnsToSelect + ", p.last_visit_date" : ColumnsToSelect;
+
+            var cmd = new SQLiteCommand(string.Format(BookmarksSelectStatementTemplate, columnsToSelect), connection);
+            dynamic reader = new DynamicReader(cmd.ExecuteReader());
+            var rows = new List<FirefoxBookmarkRow>();
+            while (reader.Read())
+            {
+                rows.Add(new FirefoxBookmarkRow()
+                {
+                    Id = reader.id,
+                    Parent = reader.parent,
+                    Type = reader.type,
+                    Position = reader.position,
+                    Title = reader.title,
+                    Url = reader.url,
+                    LastModified = reader.lastmodified,
+                    DateAdded = reader.dateadded,
+                    LastVisit = reader.last_visit_date,
+                    VisitCount = reader.visit_count,
+                    FaviconUrl = reader.favicon_url,
+                    FaviconData = reader.favicon_data,
+                    FaviconContentType = reader.favicon_type,
+                    Hidden = reader.hidden > 0,
+                });
+            }
+            return rows;
         }
 
         /// <summary>
         /// Creates bookmarks container from DB rows
         /// </summary>
         /// <returns></returns>
-        protected virtual FirefoxBookmarkFolder ConvertRowsToBookmarksContainer(IList<BookmarkRow> rows)
+        protected virtual FirefoxBookmarkFolder ConvertRowsToBookmarksContainer(IList<FirefoxBookmarkRow> rows)
         {
             var bookmarks = new FirefoxBookmarkFolder();
             int? bookmarksToolbarId = GetFolderIdByType("toolbar");
@@ -97,15 +144,21 @@ namespace BookmarksManager.Firefox
                 FirefoxBookmarkFolder parent;
                 if (folderIndexer.TryGetValue(row.Parent, out parent))
                 {
+                    //firefox treats livemarks (RSS bookmarks) as folders, we want them to be links
+                    if (row.Attributes != null && row.Attributes.Any(r => r.AttributeName.Contains("livemark")))
+                        row.Type = 1;
                     if (row.Type == 2) //folder
                     {
                         var folder = RowToFolder(row,bookmarksToolbarId);
-                        bookmarks.Add(folder);
+                        if ((!folder.Internal || IncludeInternal) && !row.Hidden)
+                            bookmarks.Add(folder);
                         folderIndexer.Add(row.Id, folder);
                     }
                     else if (row.Type == 1) //link
                     {
-                        parent.Add(RowToLink(row));
+                        var link = RowToLink(row);
+                        if ((!link.Internal || IncludeInternal) && (!row.Hidden || link.Internal))   
+                            parent.Add(link);
                     }
                 }
             }
@@ -175,7 +228,7 @@ namespace BookmarksManager.Firefox
             }
         }
 
-        private FirefoxBookmarkFolder RowToFolder(BookmarkRow row, int? bookmarksToolbarId)
+        private FirefoxBookmarkFolder RowToFolder(FirefoxBookmarkRow row, int? bookmarksToolbarId)
         {
             var folder = new FirefoxBookmarkFolder()
             {
@@ -189,24 +242,72 @@ namespace BookmarksManager.Firefox
                 folder.IsBoomarksToolbar = true;
                 folder.Attributes.Add("personal_toolbar_folder", "true");
             }
-
+            if (row.Attributes != null)
+            {
+                foreach (var attr in row.Attributes)
+                {
+                    var attrName = attr.AttributeName.ToLower();
+                    switch (attrName)
+                    {
+                        case "bookmarkproperties/description":
+                            folder.Description = attr.AttributeValue;
+                            break;
+                        case "places/excludefrombackup":
+                            folder.ExcludeFromBackup = attr.AttributeValue == "1";
+                            break;
+                    }
+                    if (attrName.StartsWith("places", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        folder.Internal = true;
+                    }
+                }
+            }
             return folder;
         }
 
-        private FirefoxBookmarkLink RowToLink(BookmarkRow row)
+        private FirefoxBookmarkLink RowToLink(FirefoxBookmarkRow row)
         {
-            return new FirefoxBookmarkLink()
+            var link = new FirefoxBookmarkLink()
             {
+                Id = row.Id,
                 Title = row.Title,
                 LastModified = DateTimeHelper.FromUnixTimeStamp(row.LastModified),
                 Added = DateTimeHelper.FromUnixTimeStamp(row.DateAdded),
-                Url = row.Url,
+                Url = row.Url??string.Empty,
                 LastVisit = DateTimeHelper.FromUnixTimeStamp(row.LastVisit),
                 VisitCount = (int?)row.VisitCount,
                 IconContentType = row.FaviconContentType,
                 IconData = row.FaviconData,
                 IconUrl = row.FaviconUrl,
             };
+            if (link.Url.StartsWith("places:", StringComparison.CurrentCultureIgnoreCase))
+                link.Internal = true;
+            if (row.Attributes != null)
+            {
+                foreach (var attr in row.Attributes)
+                {
+                    var attrName = attr.AttributeName.ToLower();
+                    switch (attrName)
+                    {
+                        case "livemark/feeduri":
+                            link.FeedUrl = attr.AttributeValue;
+                            break;
+                        case "livemark/siteuri":
+                            link.Url = attr.AttributeValue;
+                            break;
+                        case "bookmarkproperties/description":
+                            link.Description = attr.AttributeValue;
+                            break;
+                        case "places/excludefrombackup":
+                            link.ExcludeFromBackup = attr.AttributeValue == "1";
+                            break;
+                    }
+                    if (attrName.StartsWith("places/", StringComparison.CurrentCultureIgnoreCase))
+                        link.Internal = true;
+                }
+            }
+
+            return link;
         }
 
 
