@@ -1,9 +1,9 @@
 BookmarksManager
 =============
 
-Create and read Netscape bookmark file format (Firefox, IE, etc.)
-
+Create and read Netscape bookmark file format (exported from Firefox, IE, etc.)
 Read Firefox internal bookmarks database (places.sql)
+Read Chrome bookmarks from browser api (https://developer.chrome.com/extensions/bookmarks) and Chrome bookmarks file 
 
 License: MIT license
 
@@ -20,7 +20,7 @@ foreach (var b in bookmarks.AllLinks)
 //Read bookmarks from file
 using (var file = File.OpenRead("path_to_file"))
 {
-  var reader = new NetscapeBookmarksReader;
+  var reader = new NetscapeBookmarksReader();
   //supports encoding detection when reading from stream
   var bookmarks = reader.Read(file);
   foreach (var b in bookmarks.AllLinks.Where(l=>l.LastVisit < DateTime.Today))
