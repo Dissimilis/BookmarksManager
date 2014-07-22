@@ -11,12 +11,12 @@ namespace BookmarksManager
 
         public static DateTime? FromUnixTimeStamp(long? unixTimeStamp)
         {
-            if (!unixTimeStamp.HasValue)
+            if (!unixTimeStamp.HasValue || unixTimeStamp < 1)
                 return null;
             if (unixTimeStamp > 99999999999)
             {
                 if (unixTimeStamp > 99999999999999) //microseconds
-                    unixTimeStamp = unixTimeStamp/1000;
+                    unixTimeStamp = unixTimeStamp/10000;
                 return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds((double)unixTimeStamp).ToLocalTime();
             }
             return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds((double)unixTimeStamp).ToLocalTime();
