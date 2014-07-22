@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="BookmarksBase.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="ChromeReaderTest.cs" />
     <Compile Include="NetscapeReaderTests.cs" />
     <Compile Include="NetscapeWritterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +65,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookmarksManager.Chrome\BookmarksManager.Chrome.csproj">
+      <Project>{22F781BD-B282-4541-9F70-84BC0A906C32}</Project>
+      <Name>BookmarksManager.Chrome</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BookmarksManager.Firefox\BookmarksManager.Firefox.csproj">
       <Project>{dfe91bf7-d224-4ab8-a6c4-dd93073d530a}</Project>
       <Name>BookmarksManager.Firefox</Name>
