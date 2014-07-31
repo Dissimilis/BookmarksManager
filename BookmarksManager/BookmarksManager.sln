@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookmarksManager.Firefox", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookmarksManager.Chrome", "..\BookmarksManager.Chrome\BookmarksManager.Chrome.csproj", "{22F781BD-B282-4541-9F70-84BC0A906C32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookmarksManager.Icebergs", "..\BookmarksManager.Icebergs\BookmarksManager.Icebergs.csproj", "{03173582-4980-4E8F-9814-D7E3476AB721}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,16 @@ Global
 		{22F781BD-B282-4541-9F70-84BC0A906C32}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{22F781BD-B282-4541-9F70-84BC0A906C32}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{22F781BD-B282-4541-9F70-84BC0A906C32}.Release|Win32.ActiveCfg = Release|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

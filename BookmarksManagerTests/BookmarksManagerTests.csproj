@@ -51,6 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BookmarksBase.cs" />
+    <Compile Include="IcebergsReaderTest.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ChromeReaderTest.cs" />
     <Compile Include="NetscapeReaderTests.cs" />
@@ -73,6 +74,10 @@
       <Project>{dfe91bf7-d224-4ab8-a6c4-dd93073d530a}</Project>
       <Name>BookmarksManager.Firefox</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\BookmarksManager.Icebergs\BookmarksManager.Icebergs.csproj">
+      <Project>{03173582-4980-4e8f-9814-d7e3476ab721}</Project>
+      <Name>BookmarksManager.Icebergs</Name>
     </ProjectReference>
     <ProjectReference Include="..\BookmarksManager\BookmarksManager.csproj">
       <Project>{91a7837e-81ca-470a-bb73-0126e110818b}</Project>
