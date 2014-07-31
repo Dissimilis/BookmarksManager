@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using BookmarksManager;
 using BookmarksManager.Icebergs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +18,10 @@ namespace BookmarksManagerTests
         
         public IcebergsReaderTest()
         {
-            _reader = new IcebergsBookmarksReader();
+            _reader = new IcebergsBookmarksReader()
+            {
+                HtmlDecoder = HttpUtility.HtmlDecode
+            };
         }
         
 
@@ -48,11 +52,14 @@ namespace BookmarksManagerTests
                 Assert.IsTrue(container.GetAllItems<IcedropVideo>().Count(v=>v.VideoId != null && v.VideoSource != null) > 2, "Must have more than 2 video bookmarks");
                 Assert.IsTrue(container.GetAllItems<IcedropImage>().Count(i=>!string.IsNullOrEmpty(i.Referrer)) > 2, "Must have more than 2 image bookmarks");
                 Assert.IsTrue(container.GetAllItems<IcedropText>().Any(t=>!string.IsNullOrEmpty(t.Text)), "Must have at least one text bookmark");
-
+                Assert.IsTrue(container.GetAllItems<IcedropUserFile>().Any(t => t.Size.HasValue), "Must have at least one user file");
+                Assert.IsTrue(container.GetAllItems<IcedropNote>().Any(t => !string.IsNullOrEmpty(t.Text)), "Must have at least one note");
                 Assert.IsTrue(container.AllLinks.Any(l=>l.Added.HasValue), "Must have link with date set");
                 Assert.IsTrue(container.AllLinks.Any(l=>l.Added > new DateTime(2014,01,01)), "Must link not older than 2014");
 
                 Assert.IsTrue(container.GetAllItems<IcedropItem>().Any(l => l.Comments != null && l.Comments.Any()), "Must have item with comments");
+
+                Assert.IsTrue(container.GetAllItems<IcedropNote>().Any(l => l.Text.Contains("<div ")), "Must have note with properly decoded html content");
 
             }
         }

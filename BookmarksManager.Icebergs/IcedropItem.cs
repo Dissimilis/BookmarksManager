@@ -42,7 +42,13 @@ namespace BookmarksManager.Icebergs
     {
         public string Text { get; set; }
     }
+    public class IcedropNote : IcedropItem
+    {
+        public string Text { get; set; }
+    }
     public class IcedropLink : IcedropItem { }
+    public class IcedropUserFile : IcedropItem { }
+    
 
     public class IcedropComment
     {

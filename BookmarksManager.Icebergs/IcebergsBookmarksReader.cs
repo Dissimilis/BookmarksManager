@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,6 +15,17 @@ namespace BookmarksManager.Icebergs
     /// <returns>BookmarkFolder with icebergs and icedrops. Empty folder if file is unknown</returns>
     public class IcebergsBookmarksReader : BookmarksReaderBase<BookmarkFolder>
     {
+        private Func<string, string> _htmlDecoder;
+
+        /// <summary>
+        /// Html decoder to use on text fields. You can pass only HttpUtility.HtmlDecode, o combine it with some HTML sanitizer
+        /// By default no decoder is used
+        /// </summary>
+        public Func<string, string> HtmlDecoder {
+            get { return _htmlDecoder ?? (_htmlDecoder = (html) => html); }
+            set { _htmlDecoder = value; }
+        }
+
         public override BookmarkFolder Read(string inputString)
         {
             if (inputString == null)
@@ -47,27 +59,37 @@ namespace BookmarksManager.Icebergs
                         switch (icedrop.type.ToLower())
                         {
                             case "bookmarkletthumbnail":
-                                item = new IcedropLink();
+                                item = new IcedropLink(){ThumbnailUrl = icedrop.url};
                                 break;
                             case "bookmarkletimage":
                                 item = new IcedropImage()
                                 {
                                     Referrer = icedrop.origin,
-                                    Url = icedrop.url
+                                    Url = icedrop.url,
+                                    ThumbnailUrl = icedrop.url
                                 };
                                 break;
                             case "bookmarkletvideo":
                                 item = new IcedropVideo()
                                 {
                                     VideoId = icedrop.videoId,
-                                    VideoSource = icedrop.videoSource
+                                    VideoSource = icedrop.videoSource,
+                                    ThumbnailUrl = icedrop.url,
                                 };
                                 break;
                             case "bookmarklettext":
                                 item = new IcedropText()
                                 {
-                                    Text = icedrop.textContent,
-                                    Description = icedrop.textContent
+                                    Text = HtmlDecoder(icedrop.textContent ?? string.Empty),
+                                };
+                                break;
+                            case "userfile":
+                                item = new IcedropUserFile();
+                                break;
+                            case "note":
+                                item = new IcedropNote()
+                                {
+                                    Text = HtmlDecoder(icedrop.textContent ?? string.Empty),
                                 };
                                 break;
                             default: //skip unknown item
@@ -85,24 +107,22 @@ namespace BookmarksManager.Icebergs
         private void AddCommonProperties(IcedropItem item, IcedropModel model)
         {
             item.Added = DateTimeHelper.FromUnixTimeStamp(model.creationTime);
-            item.Title = model.title;
+            item.Title = HtmlDecoder(model.title ?? string.Empty);
             item.Size = model.size;
             item.Initial = model.isDefault ?? false;
             item.Public = model.@public ?? false;
             if (item.Url == null)
                 item.Url = model.origin;
             //item.IconUrl = model.url;
-            item.AuthorName = model.authorName;
+            if (item.AuthorName != null)
+                item.AuthorName = HtmlDecoder(model.authorName);
             item.AuthorId = model.authorId;
             item.Id = model.id;
-            if (item.ThumbnailUrl == null)
-                item.ThumbnailUrl = model.url;
-
             if (model.comments != null && model.comments.Any())
             {
                 item.Comments = model.comments.Select(comment => new IcedropComment()
                 {
-                    AuthorId = comment.authorId, AuthorName = comment.authorFullName, Comment = comment.comment, Created = DateTimeHelper.FromUnixTimeStamp(comment.time),
+                    AuthorId = comment.authorId, AuthorName = comment.authorFullName, Comment = HtmlDecoder(comment.comment??string.Empty), Created = DateTimeHelper.FromUnixTimeStamp(comment.time),
                 });
             }
 
