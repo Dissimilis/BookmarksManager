@@ -43,6 +43,7 @@ namespace BookmarksManagerTests
             using (var file = File.OpenRead(bookmarksFilePath))
             {
                 var container = _reader.Read(file);
+                
                 Assert.AreEqual(2, container.Count, "Must have exactly 2 folders (icebergs)");
                 Assert.IsTrue(container.GetAllItems<IcedropItem>().Count(i => i.Initial) > 40, "Must have more than 40 system created items");
                 Assert.AreEqual(1, container.GetAllItems<IcedropItem>().Count(i => i.Public && i.Initial), "Must have exatly one system created public item");
@@ -58,6 +59,8 @@ namespace BookmarksManagerTests
                 Assert.IsTrue(container.AllLinks.Any(l=>l.Added > new DateTime(2014,01,01)), "Must link not older than 2014");
 
                 Assert.IsTrue(container.GetAllItems<IcedropItem>().Any(l => l.Comments != null && l.Comments.Any()), "Must have item with comments");
+
+                Assert.IsTrue(container.GetAllItems<IcedropUserFile>().Any(l => !string.IsNullOrEmpty(l.Url) && l.Title == "Highlight"), "Must have userFile with url and named Highlight");
 
                 Assert.IsTrue(container.GetAllItems<IcedropNote>().Any(l => l.Text.Contains("<div ")), "Must have note with properly decoded html content");
 

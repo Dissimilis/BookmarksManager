@@ -84,7 +84,10 @@ namespace BookmarksManager.Icebergs
                                 };
                                 break;
                             case "userfile":
-                                item = new IcedropUserFile();
+                                item = new IcedropUserFile()
+                                {
+                                    Url = icedrop.url
+                                };
                                 break;
                             case "note":
                                 item = new IcedropNote()
