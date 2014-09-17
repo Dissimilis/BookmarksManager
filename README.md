@@ -3,7 +3,7 @@ BookmarksManager (simple .NET/C# lib for importing/exporting bookmarks)
 
 With this library you can:
 * Write/export and read/import [Netscape bookmark file format](http://msdn.microsoft.com/en-us/library/aa753582%28v=vs.85%29.aspx) (exported from Firefox, IE, etc.)
-* Read/import Firefox internal bookmarks database (places.sql)
+* Read/import Firefox internal bookmarks sqlite database (places.sql)
 * Read/import Chrome bookmarks from browser api (https://developer.chrome.com/extensions/bookmarks) and Chrome bookmarks file (JSON format) 
 
 License: MIT license
