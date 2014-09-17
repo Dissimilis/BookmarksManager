@@ -7,6 +7,8 @@ Read Chrome bookmarks from browser api (https://developer.chrome.com/extensions/
 
 License: MIT license
 
+NuGet packages: https://www.nuget.org/packages?q=bookmarksmanager
+
 **Usage examples:**
 ```csharp
 //Read bookmarks from string
