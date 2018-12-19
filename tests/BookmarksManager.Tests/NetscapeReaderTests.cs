@@ -81,11 +81,11 @@ namespace BookmarksManager.Tests
         [TestMethod]
         public void FolderAttributesContainer()
         {
-            var html = string.Format(HtmlTemplate, "<DT><H3 ADD_DATE=1355307132 custom='1'>Test folder</H3><DL><p></DL><p>", "utf-8");
+            var html = string.Format(HtmlTemplate, "<DT><H3 ADD_DATE=1355314332 custom='1'>Test folder</H3><DL><p></DL><p>", "utf-8");
             var container = _reader.Read(html);
             var folder = (BookmarkFolder) container.Single();
-            Assert.AreEqual(new DateTime(2012, 12, 12, 11, 12, 12, DateTimeKind.Local), folder.Added, "Folder attributes was not readed");
-            Assert.AreEqual("1", folder.Attributes["custom"], "Folder attributes was not readed");
+            Assert.AreEqual(new DateTime(2012, 12, 12, 12, 12, 12, DateTimeKind.Utc), folder.Added, "Folder attributes was not read");
+            Assert.AreEqual("1", folder.Attributes["custom"], "Folder attributes was not read");
         }
 
         [TestMethod]

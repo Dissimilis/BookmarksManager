@@ -6,7 +6,8 @@ namespace BookmarksManager
     {
         public static int ToUnixTimestamp(this DateTime time)
         {
-            return (Int32) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            //todo: use DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            return (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc))).TotalSeconds;
         }
 
         public static DateTime? FromUnixTimeStamp(long? unixTimeStamp)
@@ -17,17 +18,16 @@ namespace BookmarksManager
             {
                 if (unixTimeStamp > 99999999999999) //microseconds
                     unixTimeStamp = unixTimeStamp/10000;
-                return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds((double)unixTimeStamp).ToLocalTime();
+                return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds((double)unixTimeStamp);
             }
-            return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds((double)unixTimeStamp).ToLocalTime();
+            return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds((double)unixTimeStamp);
         }
 
         public static DateTime? FromUnixTimeStamp(string unixTimeStamp)
         {
-            int unixTime;
-            if (!string.IsNullOrEmpty(unixTimeStamp) && int.TryParse(unixTimeStamp, out unixTime))
+            if (!string.IsNullOrEmpty(unixTimeStamp) && long.TryParse(unixTimeStamp, out long unixTime))
             {
-                return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTime).ToLocalTime();
+                return FromUnixTimeStamp(unixTime);
             }
             return null;
         }
