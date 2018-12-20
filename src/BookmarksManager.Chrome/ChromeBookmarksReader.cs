@@ -60,16 +60,16 @@ namespace BookmarksManager.Chrome
             {
                 var item = new BookmarkLink(model.url, model.title??model.name);
                 AddAttributes(item.Attributes, model);
-                item.Added = DateTimeHelper.FromUnixTimeStamp(model.dateadded ?? model.date_added);
-                item.LastModified = DateTimeHelper.FromUnixTimeStamp(model.dateGroupModified ?? model.date_modified);
+                item.Added = parseTimeStamp(model.dateadded ?? model.date_added);
+                item.LastModified = parseTimeStamp(model.dateGroupModified ?? model.date_modified);
                 return item;
             }
             else
             {
                 var folder = new BookmarkFolder(model.title ?? model.name);
                 AddAttributes(folder.Attributes, model);
-                folder.Added = DateTimeHelper.FromUnixTimeStamp(model.dateadded??model.date_added);
-                folder.LastModified = DateTimeHelper.FromUnixTimeStamp(model.dateGroupModified??model.date_modified);
+                folder.Added = parseTimeStamp(model.dateadded??model.date_added);
+                folder.LastModified = parseTimeStamp(model.dateGroupModified??model.date_modified);
                 if (model.children != null)
                 {
                     foreach (var inner in model.children.OrderBy(x => x.index ?? 0))
@@ -90,8 +90,16 @@ namespace BookmarksManager.Chrome
             if (model.parentid != null)
                 attributes.Add("parentid", model.parentid);
             var title = model.title ?? model.name;
-            if (title != null && string.Equals("bookmarks bar", title, StringComparison.InvariantCultureIgnoreCase) && model.url == null)
+            if (title != null && string.Equals("bookmarks bar", title, StringComparison.OrdinalIgnoreCase) && model.url == null)
                 attributes.Add("personal_toolbar_folder", "true");
+        }
+
+        private DateTime? parseTimeStamp(long? timeStamp)
+        {
+            //http://fileformats.archiveteam.org/wiki/Chrome_bookmarks
+            if (timeStamp == null)
+                return null;
+            return DateTime.FromFileTime(timeStamp.Value*10);
         }
 
     }

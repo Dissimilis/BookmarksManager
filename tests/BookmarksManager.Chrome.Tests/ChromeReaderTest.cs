@@ -55,7 +55,7 @@ namespace BookmarksManager.Chrome.Tests
                 Assert.IsTrue(container.AllFolders.Count() >= 3, "Chrome must have at least 3 bookmarks folders");
                 Assert.AreEqual(container.AllItems.Count(), container.AllFolders.Count()+container.AllLinks.Count());
 
-                Assert.IsTrue(container.AllLinks.Any(l => l.Added.HasValue && l.Added.Value < DateTime.Now), "Chrome bookmarks must contain at least one bookmark which is added before DateTime.Now");
+                Assert.IsTrue(container.AllLinks.Any(l => l.Added.HasValue && l.Added.Value < DateTime.UtcNow), "Chrome bookmarks must contain at least one bookmark which is added before DateTime.Now");
             }
         }
     }
