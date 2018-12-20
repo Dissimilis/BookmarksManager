@@ -14,12 +14,7 @@ namespace BookmarksManager
         {
             if (!unixTimeStamp.HasValue || unixTimeStamp < 1)
                 return null;
-            if (unixTimeStamp > 99999999999)
-            {
-                if (unixTimeStamp > 99999999999999) //microseconds
-                    unixTimeStamp = unixTimeStamp/10000;
-                return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds((double)unixTimeStamp);
-            }
+            unixTimeStamp = takeNDigits(unixTimeStamp.Value, 10);
             return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds((double)unixTimeStamp);
         }
 
@@ -30,6 +25,17 @@ namespace BookmarksManager
                 return FromUnixTimeStamp(unixTime);
             }
             return null;
+        }
+        private static long takeNDigits(long number, int n)
+        {
+            number = Math.Abs(number);
+            if (number == 0)
+                return number;
+            int numberOfDigits = (int)Math.Floor(Math.Log10(number) + 1);
+            if (numberOfDigits >= n)
+                return (int)Math.Truncate((number / Math.Pow(10, numberOfDigits - n)));
+            else
+                return number;
         }
     }
 }

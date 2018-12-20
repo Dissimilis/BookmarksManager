@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28407.52
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager", "src\BookmarksManager\BookmarksManager.csproj", "{91A7837E-81CA-470A-BB73-0126E110818B}"
 EndProject
@@ -9,17 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager.Firefox", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager.Chrome", "src\BookmarksManager.Chrome\BookmarksManager.Chrome.csproj", "{22F781BD-B282-4541-9F70-84BC0A906C32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager.Icebergs", "src\BookmarksManager.Icebergs\BookmarksManager.Icebergs.csproj", "{03173582-4980-4E8F-9814-D7E3476AB721}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C2B8B0D3-994C-49CF-9AC4-1D616229FA4D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager.Tests", "tests\BookmarksManager.Tests\BookmarksManager.Tests.csproj", "{4410033C-D57D-477D-A2EC-81E45AA8F941}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager.Chrome.Tests", "tests\BookmarksManager.Chrome.Tests\BookmarksManager.Chrome.Tests.csproj", "{72B950CA-B237-4CD3-B452-199CEB6C4DDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookmarksManager.Firefox.Tests", "tests\BookmarksManager.Firefox.Tests\BookmarksManager.Firefox.Tests.csproj", "{259B8103-7537-43DE-95C4-547A870D2AE5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookmarksManager.Icebergs.Tests", "tests\BookmarksManager.Icebergs.Tests\BookmarksManager.Icebergs.Tests.csproj", "{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookmarksManager.Firefox.Tests", "tests\BookmarksManager.Firefox.Tests\BookmarksManager.Firefox.Tests.csproj", "{259B8103-7537-43DE-95C4-547A870D2AE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,16 +57,6 @@ Global
 		{22F781BD-B282-4541-9F70-84BC0A906C32}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{22F781BD-B282-4541-9F70-84BC0A906C32}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{22F781BD-B282-4541-9F70-84BC0A906C32}.Release|Win32.ActiveCfg = Release|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{03173582-4980-4E8F-9814-D7E3476AB721}.Release|Win32.ActiveCfg = Release|Any CPU
 		{4410033C-D57D-477D-A2EC-81E45AA8F941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4410033C-D57D-477D-A2EC-81E45AA8F941}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4410033C-D57D-477D-A2EC-81E45AA8F941}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -105,18 +91,6 @@ Global
 		{259B8103-7537-43DE-95C4-547A870D2AE5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{259B8103-7537-43DE-95C4-547A870D2AE5}.Release|Win32.ActiveCfg = Release|Any CPU
 		{259B8103-7537-43DE-95C4-547A870D2AE5}.Release|Win32.Build.0 = Release|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Debug|Win32.Build.0 = Debug|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Release|Win32.ActiveCfg = Release|Any CPU
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,7 +99,6 @@ Global
 		{4410033C-D57D-477D-A2EC-81E45AA8F941} = {C2B8B0D3-994C-49CF-9AC4-1D616229FA4D}
 		{72B950CA-B237-4CD3-B452-199CEB6C4DDB} = {C2B8B0D3-994C-49CF-9AC4-1D616229FA4D}
 		{259B8103-7537-43DE-95C4-547A870D2AE5} = {C2B8B0D3-994C-49CF-9AC4-1D616229FA4D}
-		{1986C0E7-CC3A-40EE-AEA7-4321F4B596B5} = {C2B8B0D3-994C-49CF-9AC4-1D616229FA4D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5B9A2D56-3C76-4E26-B240-CBDDC3B6A76B}
