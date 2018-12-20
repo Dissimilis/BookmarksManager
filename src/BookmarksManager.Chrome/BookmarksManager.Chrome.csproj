@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>latest</LangVersion>
+
+    <Version>2.0.0</Version>
+    <Authors>Marius Vitkevičius</Authors>
+    <Company />
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Dissimilis/BookmarksManager/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Dissimilis/BookmarksManager</PackageProjectUrl>
+    <Description>Library for handling Chrome bookmarks. Supports reading from Chrome bookmarks file and JSON from Chrome API</Description>
+    <PackageTags>chrome;bookmarks;bookmark;favorites</PackageTags>
+    <PackageReleaseNotes />
+    <RepositoryUrl>https://github.com/Dissimilis/BookmarksManager</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>master</RepositoryBranch>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RootNamespace>BookmarksManager</RootNamespace>
+    <AssemblyName>BookmarksManager.Chrome</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>BookmarksManager.Chrome</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookmarksManager\BookmarksManager.csproj" />
+  </ItemGroup>
+
+</Project>

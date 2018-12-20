@@ -1,4 +1,4 @@
-BookmarksManager (simple .NET/C# lib for importing/exporting bookmarks)
+BookmarksManager (simple .NET Standard lib for importing/exporting browser bookmarks)
 =============
 
 With this library you can:
