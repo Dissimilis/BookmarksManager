@@ -8,8 +8,8 @@ using Majestic12;
 namespace BookmarksManager
 {
     /// <summary>
-    ///     This class is used for bookmarks container deserialization from Netscape bookmarks fomat
-    ///     Netscape bookmarks format is defacto standard for importing/exporting bookmarks from browsers
+    ///     This class is used for bookmarks container deserialization from Netscape bookmarks format
+    ///     Netscape bookmarks format is de facto standard for importing/exporting bookmarks from browsers
     ///     Format is described here: http://msdn.microsoft.com/en-us/library/aa753582%28v=vs.85%29.aspx
     /// </summary>
     public class NetscapeBookmarksReader : BookmarksReaderBase<BookmarkFolder>
@@ -26,8 +26,8 @@ namespace BookmarksManager
         public bool AutoDetectEncoding { get; set; }
 
 
-        protected Regex CharsetRegex = new Regex(@"charset\s*=\s*([\w-]+)", RegexOptions.IgnoreCase);
-        protected Regex ValidateRegex = new Regex(@"<DL\s*>.+?</DL\s*>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+        protected Regex CharsetRegex = new Regex(@"charset\s*=\s*([\w-]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected Regex ValidateRegex = new Regex(@"<DL\s*>.+?</DL\s*>", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         /// <summary>
         ///     Gets encoding from HTML meta tag
@@ -87,8 +87,8 @@ namespace BookmarksManager
                 if (AutoDetectEncoding)
                 {
                     InputEncoding = content.GetEncoding();
-                    var headerLenghtBytes = HeaderLength*InputEncoding.GetMaxByteCount(1);
-                    var toRead = headerLenghtBytes > 0 && headerLenghtBytes < content.Length ? headerLenghtBytes : content.Length;
+                    var headerLengthBytes = HeaderLength*InputEncoding.GetMaxByteCount(1);
+                    var toRead = headerLengthBytes > 0 && headerLengthBytes < content.Length ? headerLengthBytes : content.Length;
                     var header = InputEncoding.GetString(content, 0, toRead);
                     InputEncoding = GetEncoding(header);
                 }
@@ -217,8 +217,7 @@ namespace BookmarksManager
                         link.LastVisit = DateTimeHelper.FromUnixTimeStamp(attr.Value);
                         break;
                     case "icon":
-                        string contentType;
-                        link.IconData = DecodeEmbededIcon(attr.Value, out contentType);
+                        link.IconData = DecodeEmbeddedIcon(attr.Value, out var contentType);
                         link.IconContentType = contentType;
                         break;
                     case "icon_uri":
@@ -253,7 +252,7 @@ namespace BookmarksManager
             }
         }
 
-        private byte[] DecodeEmbededIcon(string data, out string contentType)
+        private byte[] DecodeEmbeddedIcon(string data, out string contentType)
         {
             contentType = null;
             if (string.IsNullOrEmpty(data))

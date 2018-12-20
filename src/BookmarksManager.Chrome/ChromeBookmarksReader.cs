@@ -18,7 +18,7 @@ namespace BookmarksManager.Chrome
         public override BookmarkFolder Read(string inputString)
         {
             if (inputString == null)
-                throw new ArgumentNullException("inputString");
+                throw new ArgumentNullException(nameof(inputString));
 
             if (IsBookmarksFile(inputString)) //chrome bookmarks file
             {

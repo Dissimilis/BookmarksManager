@@ -20,12 +20,12 @@ namespace BookmarksManager
         public string IconUrl { get; set; }
 
         /// <summary>
-        ///     favicon content if it's embeded icon
+        ///     favicon content if it's embedded icon
         /// </summary>
         public byte[] IconData { get; set; }
 
         /// <summary>
-        ///     favicon content type if it's embeded icon
+        ///     favicon content type if it's embedded icon
         /// </summary>
         public string IconContentType { get; set; }
 
@@ -46,14 +46,14 @@ namespace BookmarksManager
         public BookmarkLink(Uri url, string title = null)
         {
             if (url == null)
-                throw new ArgumentNullException("url");
+                throw new ArgumentNullException(nameof(url));
             Url = url.AbsoluteUri;
             Title = title;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} ({1})", Title, Url);
+            return $"{Title} ({Url})";
         }
     }
 }

@@ -6,7 +6,7 @@ namespace BookmarksManager
     internal static class TextHelpers
     {
         /// <summary>
-        ///     Poor mans solution of detecting text encoding
+        ///     Poor man's solution of detecting text encoding
         /// </summary>
         /// <param name="b"></param>
         /// <returns>Encoding detected from BOM, UTF8 if no BOM is present</returns>
@@ -38,7 +38,7 @@ namespace BookmarksManager
             }
 
             //if number of zero bytes exeeds threshold, asume it's utf32 or utf16 content
-            //this does not chek for BigEndian
+            //this does not check for BigEndian
             var zeroBytesCnt = b.Count(x => x == 0);
             if (zeroBytesCnt > b.Length*0.5)
                 return Encoding.GetEncoding("utf-32");

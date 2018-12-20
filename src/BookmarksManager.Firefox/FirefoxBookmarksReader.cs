@@ -137,8 +137,7 @@ namespace BookmarksManager.Firefox
             var folderIndexer = new Dictionary<long, FirefoxBookmarkFolder> { { rootFolderId, bookmarks } };
             foreach (var row in rows) //folders
             {
-                FirefoxBookmarkFolder parent;
-                if (folderIndexer.TryGetValue(row.Parent, out parent))
+                if (folderIndexer.TryGetValue(row.Parent, out var parent))
                 {
                     //firefox treats livemarks (RSS bookmarks) as folders, we want them to be links
                     if (row.Attributes != null && row.Attributes.Any(r => r.AttributeName.Contains("livemark")))
@@ -163,8 +162,7 @@ namespace BookmarksManager.Firefox
 
         private int? GetFolderIdByType(string type)
         {
-            int folderId;
-            if (_roots.TryGetValue(type,out folderId))
+            if (_roots.TryGetValue(type,out var folderId))
             {
                 return folderId;
             }

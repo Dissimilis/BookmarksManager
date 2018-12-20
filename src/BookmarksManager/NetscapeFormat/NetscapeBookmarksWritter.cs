@@ -7,11 +7,11 @@ using System.Xml;
 namespace BookmarksManager
 {
     /// <summary>
-    ///     This class is used for bookmarks container serialization to Netscape bookmarks fomat
-    ///     Netscape bookmarks format is defacto standard for importing/exporting bookmarks from browsers
+    ///     This class is used for bookmarks container serialization to Netscape bookmarks format
+    ///     Netscape bookmarks format is de facto standard for importing/exporting bookmarks from browsers
     ///     Format is described here: http://msdn.microsoft.com/en-us/library/aa753582%28v=vs.85%29.aspx
     /// </summary>
-    public class NetscapeBookmarksWritter : BookmarksWritterBase<BookmarkFolder>
+    public class NetscapeBookmarksWriter : BookmarksWriterBase<BookmarkFolder>
     {
         protected string NetscapeBookmarksFileHead = @"<!DOCTYPE NETSCAPE-Bookmark-file-1>
     <!--This is an automatically generated file.
@@ -21,122 +21,122 @@ namespace BookmarksManager
     <Title>Bookmarks</Title>
     <H1>Bookmarks</H1>";
 
-        public const string Identation = "    ";
+        public const string Indentation = "    ";
         public static readonly string[] IgnoredAttributes = {"last_modified", "icon", "icon_uri", "href", "last_visit", "add_date", "feedurl"};
 
 
-        public NetscapeBookmarksWritter(BookmarkFolder bookmarksContainer)
+        public NetscapeBookmarksWriter(BookmarkFolder bookmarksContainer)
             : base(bookmarksContainer)
         {
         }
 
-        protected override void Write(TextWriter outputTextWritter)
+        protected override void Write(TextWriter outputTextWriter)
         {
-            if (outputTextWritter == null)
-                throw new ArgumentNullException("outputTextWritter");
-            outputTextWritter.Write(NetscapeBookmarksFileHead, OutputEncoding.WebName);
-            outputTextWritter.WriteLine();
-            using (var writter = XmlWriter.Create(outputTextWritter, new XmlWriterSettings {ConformanceLevel = ConformanceLevel.Fragment, Indent = false, Encoding = OutputEncoding}))
+            if (outputTextWriter == null)
+                throw new ArgumentNullException(nameof(outputTextWriter));
+            outputTextWriter.Write(NetscapeBookmarksFileHead, OutputEncoding.WebName);
+            outputTextWriter.WriteLine();
+            using (var writer = XmlWriter.Create(outputTextWriter, new XmlWriterSettings {ConformanceLevel = ConformanceLevel.Fragment, Indent = false, Encoding = OutputEncoding}))
             {
-                WriteFolderItems(BookmarksContainer, outputTextWritter, writter, 0);
+                WriteFolderItems(BookmarksContainer, outputTextWriter, writer, 0);
             }
         }
 
-        protected virtual void WriteFolderItems(IEnumerable<IBookmarkItem> folder, TextWriter writter, XmlWriter xmlWritter, int iteration)
+        protected virtual void WriteFolderItems(IEnumerable<IBookmarkItem> folder, TextWriter writer, XmlWriter xmlWriter, int iteration)
         {
-            WriteIdentation(iteration, writter);
-            writter.WriteLine("<DL><p>");
+            WriteIndentation(iteration, writer);
+            writer.WriteLine("<DL><p>");
             foreach (var item in folder)
             {
                 BookmarkFolder innerFolder;
                 BookmarkLink innerLink;
                 if ((innerFolder = item as BookmarkFolder) != null)
                 {
-                    WriteIdentation(iteration, writter);
-                    WriteFolderLine(innerFolder, writter, xmlWritter);
-                    WriteFolderItems(innerFolder, writter, xmlWritter, iteration + 1);
+                    WriteIndentation(iteration, writer);
+                    WriteFolderLine(innerFolder, writer, xmlWriter);
+                    WriteFolderItems(innerFolder, writer, xmlWriter, iteration + 1);
                 }
                 else if ((innerLink = item as BookmarkLink) != null)
                 {
-                    WriteIdentation(iteration, writter);
-                    WriteLinkLine(innerLink, writter, xmlWritter);
+                    WriteIndentation(iteration, writer);
+                    WriteLinkLine(innerLink, writer, xmlWriter);
                 }
             }
-            WriteIdentation(iteration, writter);
-            writter.WriteLine("</DL><p>");
+            WriteIndentation(iteration, writer);
+            writer.WriteLine("</DL><p>");
         }
 
-        protected virtual void WriteLinkLine(BookmarkLink link, TextWriter writter, XmlWriter xmlWritter)
+        protected virtual void WriteLinkLine(BookmarkLink link, TextWriter writer, XmlWriter xmlWriter)
         {
-            writter.Write("<DT>");
-            xmlWritter.WriteStartElement("A");
+            writer.Write("<DT>");
+            xmlWriter.WriteStartElement("A");
             if (link.LastModified.HasValue)
-                xmlWritter.WriteAttributeString("LAST_MODIFIED", link.LastModified.Value.ToUnixTimestamp().ToString());
+                xmlWriter.WriteAttributeString("LAST_MODIFIED", link.LastModified.Value.ToUnixTimestamp().ToString());
             if (link.LastVisit.HasValue)
-                xmlWritter.WriteAttributeString("LAST_VISIT", link.LastVisit.Value.ToUnixTimestamp().ToString());
+                xmlWriter.WriteAttributeString("LAST_VISIT", link.LastVisit.Value.ToUnixTimestamp().ToString());
             if (link.Added.HasValue)
-                xmlWritter.WriteAttributeString("ADD_DATE", link.Added.Value.ToUnixTimestamp().ToString());
+                xmlWriter.WriteAttributeString("ADD_DATE", link.Added.Value.ToUnixTimestamp().ToString());
             if (!string.IsNullOrEmpty(link.IconUrl))
-                xmlWritter.WriteAttributeString("ICON_URI", link.IconUrl);
+                xmlWriter.WriteAttributeString("ICON_URI", link.IconUrl);
             if (!string.IsNullOrEmpty(link.IconContentType) && link.IconData != null)
-                WriteEmbededIcon(link, xmlWritter);
+                WriteEmbeddedIcon(link, xmlWriter);
             if (!string.IsNullOrEmpty(link.FeedUrl))
             {
-                xmlWritter.WriteAttributeString("FEED", "true");
-                xmlWritter.WriteAttributeString("FEEDURL", link.FeedUrl);
+                xmlWriter.WriteAttributeString("FEED", "true");
+                xmlWriter.WriteAttributeString("FEEDURL", link.FeedUrl);
             }
-            xmlWritter.WriteAttributeString("HREF", link.Url);
+            xmlWriter.WriteAttributeString("HREF", link.Url);
             if (link.Attributes != null && link.Attributes.Any())
-                WriteCustomAttributes(link.Attributes, xmlWritter);
+                WriteCustomAttributes(link.Attributes, xmlWriter);
 
-            xmlWritter.WriteString(link.Title);
-            xmlWritter.WriteEndElement();
-            xmlWritter.Flush();
+            xmlWriter.WriteString(link.Title);
+            xmlWriter.WriteEndElement();
+            xmlWriter.Flush();
             if (!string.IsNullOrEmpty(link.Description))
             {
-                writter.WriteLine();
-                writter.Write("<DD>");
-                xmlWritter.WriteString(link.Description);
-                xmlWritter.Flush();
+                writer.WriteLine();
+                writer.Write("<DD>");
+                xmlWriter.WriteString(link.Description);
+                xmlWriter.Flush();
             }
-            writter.WriteLine();
+            writer.WriteLine();
         }
 
-        protected virtual void WriteEmbededIcon(BookmarkLink link, XmlWriter xmlWritter)
+        protected virtual void WriteEmbeddedIcon(BookmarkLink link, XmlWriter xmlWriter)
         {
             const string template = "data:{0};base64,{1}";
             var base64Content = Convert.ToBase64String(link.IconData);
-            xmlWritter.WriteAttributeString("ICON", string.Format(template, link.IconContentType, base64Content));
+            xmlWriter.WriteAttributeString("ICON", string.Format(template, link.IconContentType, base64Content));
         }
 
-        protected virtual void WriteFolderLine(BookmarkFolder folder, TextWriter writter, XmlWriter xmlWritter)
+        protected virtual void WriteFolderLine(BookmarkFolder folder, TextWriter writer, XmlWriter xmlWriter)
         {
-            writter.Write("<DT>");
-            xmlWritter.WriteStartElement("H3");
+            writer.Write("<DT>");
+            xmlWriter.WriteStartElement("H3");
             if (folder.LastModified.HasValue)
-                xmlWritter.WriteAttributeString("LAST_MODIFIED", folder.LastModified.Value.ToUnixTimestamp().ToString());
+                xmlWriter.WriteAttributeString("LAST_MODIFIED", folder.LastModified.Value.ToUnixTimestamp().ToString());
             if (folder.Added.HasValue)
-                xmlWritter.WriteAttributeString("ADD_DATE", folder.Added.Value.ToUnixTimestamp().ToString());
+                xmlWriter.WriteAttributeString("ADD_DATE", folder.Added.Value.ToUnixTimestamp().ToString());
             if (folder.Attributes != null && folder.Attributes.Any())
-                WriteCustomAttributes(folder.Attributes, xmlWritter);
-            xmlWritter.WriteString(folder.Title);
-            xmlWritter.WriteEndElement();
-            xmlWritter.Flush();
-            writter.WriteLine();
+                WriteCustomAttributes(folder.Attributes, xmlWriter);
+            xmlWriter.WriteString(folder.Title);
+            xmlWriter.WriteEndElement();
+            xmlWriter.Flush();
+            writer.WriteLine();
         }
 
-        protected virtual void WriteCustomAttributes(IDictionary<string, string> attributes, XmlWriter xmlWritter)
+        protected virtual void WriteCustomAttributes(IDictionary<string, string> attributes, XmlWriter xmlWriter)
         {
             foreach (var attr in attributes.Keys.Except(IgnoredAttributes, StringComparer.OrdinalIgnoreCase))
             {
-                xmlWritter.WriteAttributeString(attr.ToUpper(), attributes[attr]);
+                xmlWriter.WriteAttributeString(attr.ToUpper(), attributes[attr]);
             }
         }
 
-        protected virtual void WriteIdentation(int iteration, TextWriter writter)
+        protected virtual void WriteIndentation(int iteration, TextWriter writer)
         {
             for (var i = 0; i < iteration; i++)
-                writter.Write(Identation);
+                writer.Write(Indentation);
         }
     }
 }

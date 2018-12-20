@@ -26,33 +26,24 @@ namespace BookmarksManager
         private IDictionary<string, string> _attributes;
         public IDictionary<string, string> Attributes
         {
-            get { return _attributes ?? (_attributes = new Dictionary<string, string>()); }
-            set { _attributes = value; }
+            get => _attributes ?? (_attributes = new Dictionary<string, string>());
+            set => _attributes = value;
         }
 
         /// <summary>
         /// All links from all folders in flat structure
         /// </summary>
-        public IEnumerable<BookmarkLink> AllLinks
-        {
-            get { return this.GetAllItems<BookmarkLink>(); }
-        }
+        public IEnumerable<BookmarkLink> AllLinks => this.GetAllItems<BookmarkLink>();
 
         /// <summary>
         /// All items (links, folders and custom IBookmarkItem objects) in flat structure
         /// </summary>
-        public IEnumerable<IBookmarkItem> AllItems
-        {
-            get { return this.GetAllItems<IBookmarkItem>(); }
-        }
+        public IEnumerable<IBookmarkItem> AllItems => this.GetAllItems<IBookmarkItem>();
 
         /// <summary>
         /// All folders in flat structure
         /// </summary>
-        public IEnumerable<IBookmarkFolder> AllFolders
-        {
-            get { return this.GetAllItems<IBookmarkFolder>(); }
-        }
+        public IEnumerable<IBookmarkFolder> AllFolders => this.GetAllItems<IBookmarkFolder>();
 
         public BookmarkFolder()
         {
@@ -79,13 +70,12 @@ namespace BookmarksManager
         {
             foreach (var item in folder)
             {
-                var returnItem = item as T;
-                if (returnItem != null)
+                if (item is T returnItem)
                 {
-                    yield return (T)item;
+                    yield return returnItem;
                 }
-                var innerFolder = item as IBookmarkFolder;
-                if (innerFolder != null)
+
+                if (item is IBookmarkFolder innerFolder)
                 {
                     foreach (var innerItem in GetAllItems<T>(innerFolder))
                     {
@@ -97,7 +87,7 @@ namespace BookmarksManager
 
         public override string ToString()
         {
-            return string.Format(">>> {0} <<<", Title);
+            return $">>> {Title} <<<";
         }
     }
 }
