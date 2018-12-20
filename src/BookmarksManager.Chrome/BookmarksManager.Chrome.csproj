@@ -5,13 +5,14 @@
     <LangVersion>latest</LangVersion>
 
     <Version>2.0.0</Version>
-    <Authors>Marius Vitkevičius</Authors>
+    <Authors>Dissimilis</Authors>
     <Company />
-    <PackageLicenseUrl>https://raw.githubusercontent.com/Dissimilis/BookmarksManager/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dissimilis/BookmarksManager</PackageProjectUrl>
     <Description>Library for handling Chrome bookmarks. Supports reading from Chrome bookmarks file and JSON from Chrome API</Description>
     <PackageTags>chrome;bookmarks;bookmark;favorites</PackageTags>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>Ported to netstandard1.6; 
+Fixed timestamp parsing; </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Dissimilis/BookmarksManager</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryBranch>master</RepositoryBranch>
@@ -20,8 +21,13 @@
     <RootNamespace>BookmarksManager</RootNamespace>
     <AssemblyName>BookmarksManager.Chrome</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>BookmarksManager.Chrome</PackageId>
+    <Title>Chrome bookmarks reader</Title>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="**\*.orig" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath=".\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />

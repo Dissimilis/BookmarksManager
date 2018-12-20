@@ -5,13 +5,16 @@
     <LangVersion>latest</LangVersion>
 
     <Version>2.0.0</Version>
-    <Authors>Marius Vitkevičius</Authors>
+    <Authors>Dissimilis</Authors>
     <Company />
-    <PackageLicenseUrl>https://raw.githubusercontent.com/Dissimilis/BookmarksManager/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dissimilis/BookmarksManager</PackageProjectUrl>
     <Description>Library for handling Firefox bookmarks. Supports reading from Firefox bookmarks sqlite database</Description>
     <PackageTags>firefox;bookmarks;bookmark;favorites</PackageTags>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>Ported to netstandard2.0; 
+Added compatibility with newest Firefox database format (v63); 
+Removed favicon support (new database not longer contains it; 
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Dissimilis/BookmarksManager</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryBranch>master</RepositoryBranch>
@@ -20,9 +23,14 @@
     <RootNamespace>BookmarksManager</RootNamespace>
     <AssemblyName>BookmarksManager.Firefox</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>BookmarksManager.Firefox</PackageId>
+    <Title>Firefox bookmarks reader</Title>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <None Remove="**\*.orig" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath=".\" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />

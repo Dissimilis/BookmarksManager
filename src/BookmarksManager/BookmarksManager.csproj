@@ -4,13 +4,15 @@
     <Configurations>Debug;Release</Configurations>
     <LangVersion>latest</LangVersion>
     <Version>2.0.0</Version>
-    <Authors>Marius Vitkevičius</Authors>
+    <Authors>Dissimilis</Authors>
     <Company />
-    <PackageLicenseUrl>https://raw.githubusercontent.com/Dissimilis/BookmarksManager/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Dissimilis/BookmarksManager</PackageProjectUrl>
     <Description>Library for handling browsers bookmarks (supports Netscape bookmarks format)</Description>
     <PackageTags>netscape;bookmarks;bookmark;favorites</PackageTags>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>Ported to netstandard1.6; 
+Minor bugfixes; 
+Braking change: NetscapeBookmarksWritter renamed to NetscapeBookmarksWriter; </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Dissimilis/BookmarksManager</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryBranch>master</RepositoryBranch>
@@ -18,12 +20,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>BookmarksManager</RootNamespace>
     <AssemblyName>BookmarksManager</AssemblyName>
+    <Title>Browser bookmarks manager</Title>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="**\*.orig" />
-    <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath=".\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
