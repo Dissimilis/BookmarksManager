@@ -14,7 +14,7 @@ namespace BookmarksManager.Tests
     [TestClass]
     public class NetscapeWritterTests
     {
-        private readonly NetscapeBookmarksWritter _writter;
+        private readonly NetscapeBookmarksWriter _writter;
 
         private readonly Regex _headerRegex = new Regex(@"<!DOCTYPE\s+?NETSCAPE-BOOKMARK-FILE-\d+>.+?<TITLE.+?</TITLE>.+?<H1.+?</H1>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _folderTagsRegex = new Regex("dl><p", RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -26,7 +26,7 @@ namespace BookmarksManager.Tests
         public NetscapeWritterTests()
         {
             var emptyContainer = new BookmarkFolder();
-            _writter = new NetscapeBookmarksWritter(emptyContainer);
+            _writter = new NetscapeBookmarksWriter(emptyContainer);
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
@@ -62,7 +62,7 @@ namespace BookmarksManager.Tests
         public void SimpleStructureBasic()
         {
             var bookmarks = Helpers.GetSimpleStructure();
-            var writter = new NetscapeBookmarksWritter(bookmarks);
+            var writter = new NetscapeBookmarksWriter(bookmarks);
             var result = writter.ToString();
             var folderTagCnt = _folderTagsRegex.Matches(result).Count;
             var itemTagsCnt = _linkRegex.Matches(result).Count;
@@ -94,7 +94,7 @@ namespace BookmarksManager.Tests
             var bookmarks = Helpers.GetSimpleStructure();
             var unicodeStr = Helpers.RandomUnicodeString(10240);
             bookmarks.Add(new BookmarkLink("http://example.com", "Unicode title test: <" + unicodeStr));
-            var writter = new NetscapeBookmarksWritter(bookmarks) {OutputEncoding = encoding};
+            var writter = new NetscapeBookmarksWriter(bookmarks) {OutputEncoding = encoding};
             using (var stream = new MemoryStream())
             {
                 writter.Write(stream);
@@ -109,7 +109,7 @@ namespace BookmarksManager.Tests
             var encoding = Encoding.GetEncoding(1257);
             var bookmarks = Helpers.GetSimpleStructure();
             bookmarks.Add(new BookmarkLink("http://example.com", "ASCII title test: ƒ ąčęėįšųūĄŪ"));
-            var writter = new NetscapeBookmarksWritter(bookmarks) {OutputEncoding = encoding};
+            var writter = new NetscapeBookmarksWriter(bookmarks) {OutputEncoding = encoding};
             using (var stream = new MemoryStream())
             {
                 writter.Write(stream);
@@ -126,7 +126,7 @@ namespace BookmarksManager.Tests
             var bookmarks = Helpers.GetSimpleStructure();
             var randomBytes = Encoding.UTF8.GetBytes(Helpers.RandomUnicodeString(4096));
             bookmarks.Add(new BookmarkLink("http://example.com", "<\">") {IconContentType = "image/png", IconData = randomBytes});
-            var writter = new NetscapeBookmarksWritter(bookmarks);
+            var writter = new NetscapeBookmarksWriter(bookmarks);
             using (var stream = new MemoryStream())
             {
                 writter.Write(stream);

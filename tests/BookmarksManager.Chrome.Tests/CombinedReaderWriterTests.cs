@@ -15,11 +15,11 @@ namespace BookmarksManager.Chrome.Tests
         public void EmptyContainer()
         {
             var emptyContainer = new BookmarkFolder();
-            var writter = new NetscapeBookmarksWritter(emptyContainer);
+            var writter = new NetscapeBookmarksWriter(emptyContainer);
             var reader = new NetscapeBookmarksReader();
             var write1 = writter.ToString();
             var readed = reader.Read(write1);
-            writter = new NetscapeBookmarksWritter(readed);
+            writter = new NetscapeBookmarksWriter(readed);
             var write2 = writter.ToString();
             Assert.AreEqual(write1, write2, true);
         }
@@ -32,7 +32,7 @@ namespace BookmarksManager.Chrome.Tests
                 new BookmarkLink("a", "b") {Attributes = new Dictionary<string, string> {{"custom", "1"}}},
                 new BookmarkFolder("folder") {Attributes = new Dictionary<string, string> {{"custom", "2"}, {"add_date", "ę"}}}
             };
-            var writter = new NetscapeBookmarksWritter(container);
+            var writter = new NetscapeBookmarksWriter(container);
             var reader = new NetscapeBookmarksReader();
             var write1 = writter.ToString();
             var readed = reader.Read(write1);
@@ -46,11 +46,11 @@ namespace BookmarksManager.Chrome.Tests
         {
             var container = Helpers.GetSimpleStructure();
             container.Add(new BookmarkLink("test", "test123") {Description = "<br>"});
-            var writter = new NetscapeBookmarksWritter(container);
+            var writter = new NetscapeBookmarksWriter(container);
             var reader = new NetscapeBookmarksReader();
             var write1 = writter.ToString();
             var readed = reader.Read(write1);
-            writter = new NetscapeBookmarksWritter(readed);
+            writter = new NetscapeBookmarksWriter(readed);
             var write2 = writter.ToString();
             readed = reader.Read(write2);
             Assert.AreEqual(write1, write2, true);
@@ -64,7 +64,7 @@ namespace BookmarksManager.Chrome.Tests
             var container = Helpers.GetSimpleStructure();
             container.Add(new BookmarkLink("test", "ƒ"));
             var ms = new MemoryStream();
-            var writter = new NetscapeBookmarksWritter(container) { OutputEncoding = Encoding.Unicode };
+            var writter = new NetscapeBookmarksWriter(container) { OutputEncoding = Encoding.Unicode };
             writter.Write(ms);
             ms = new MemoryStream(ms.GetBuffer());
             var reader = new NetscapeBookmarksReader { AutoDetectEncoding = true };
