@@ -20,11 +20,10 @@ namespace BookmarksManager.Firefox
 
 
         private const string TableInfoSelectTemplate = @"PRAGMA table_info(`{0}`)";
-        private const string BookmarksRootsSelectStatement = @"SELECT root_name, folder_id FROM moz_bookmarks_roots";
+        private const string BookmarksRootsSelectStatement = @"SELECT title, id FROM moz_bookmarks where parent = 1 order by position";
         private const string BookmarksSelectStatementTemplate = @"select {0}
             from moz_bookmarks b 
             left join moz_places p on b.fk = p.id
-            left join moz_favicons f on f.id = p.favicon_id
             where b.id > 0 and b.type > 0 and b.parent is not null
             order by parent,position";
 
@@ -32,7 +31,7 @@ namespace BookmarksManager.Firefox
             from moz_items_annos a
             left join moz_anno_attributes aa on aa.id = a.anno_attribute_id";
 
-        private const string ColumnsToSelect = "b.id,b.parent,b.type,b.position,b.title,b.dateadded,b.lastmodified,p.url,p.visit_count,p.hidden, f.url as favicon_url, f.data as favicon_data, f.mime_type as favicon_type";
+        private const string ColumnsToSelect = "b.id,b.parent,b.type,b.position,b.title,b.dateadded,b.lastmodified,p.url,p.visit_count,p.hidden";
         private const string ConnectionStringTemplate = "Data source={0};";
         private readonly IDictionary<string, HashSet<string>> _dbColumnInfo = new Dictionary<string, HashSet<string>>();
         private readonly IDictionary<string, int> _roots = new Dictionary<string, int>();
@@ -118,9 +117,6 @@ namespace BookmarksManager.Firefox
                     DateAdded = reader.dateadded,
                     LastVisit = reader.last_visit_date,
                     VisitCount = reader.visit_count,
-                    FaviconUrl = reader.favicon_url,
-                    FaviconData = reader.favicon_data,
-                    FaviconContentType = reader.favicon_type,
                     Hidden = reader.hidden > 0,
                 });
             }
@@ -186,10 +182,10 @@ namespace BookmarksManager.Firefox
                 {
                     while (reader.Read())
                     {
-                        string rootName = reader.root_name.ToLower();
+                        string rootName = reader.title.ToLower();
                         if (!_roots.ContainsKey(rootName))
                         {
-                            _roots.Add(rootName, (int)reader.folder_id);
+                            _roots.Add(rootName, (int)reader.id);
                         }
                     }
                 }
@@ -276,9 +272,6 @@ namespace BookmarksManager.Firefox
                 Url = row.Url??string.Empty,
                 LastVisit = DateTimeHelper.FromUnixTimeStamp(row.LastVisit),
                 VisitCount = (int?)row.VisitCount,
-                IconContentType = row.FaviconContentType,
-                IconData = row.FaviconData,
-                IconUrl = row.FaviconUrl,
             };
             if (link.Url.StartsWith("places:", StringComparison.CurrentCultureIgnoreCase))
                 link.Internal = true;

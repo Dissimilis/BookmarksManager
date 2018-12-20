@@ -14,9 +14,6 @@ namespace BookmarksManager.Firefox
         public long? DateAdded { get; set; }
         public long? LastVisit { get; set; }
         public long? VisitCount { get; set; }
-        public string FaviconUrl { get; set; }
-        public byte[] FaviconData { get; set; }
-        public string FaviconContentType { get; set; }
         public bool Hidden { get; set; }
         public List<FirefoxBookmarkAttribute> Attributes { get; set; }
     }

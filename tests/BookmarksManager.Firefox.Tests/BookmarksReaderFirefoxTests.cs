@@ -12,11 +12,13 @@ namespace BookmarksManager.Tests
         //C:\Users\Marius\AppData\Roaming\Mozilla\Firefox\Profiles\58g7m5fg.default\places.sqlite
 
         private string _ff_v30_places;
+        private string _ff_v63_places;
         private string _ff_v3_places;
 
         [TestInitialize]
         public void Setup()
         {
+            _ff_v63_places = Path.GetFullPath("TestData\\ff63_places.sqlite");
             _ff_v30_places = Path.GetFullPath("TestData\\ff30_places.sqlite");
             _ff_v3_places = Path.GetFullPath("TestData\\ff3_places.sqlite");
             //Assert.IsTrue(File.Exists(_ff_v30_places));
@@ -29,6 +31,20 @@ namespace BookmarksManager.Tests
             var bookmarks = ffReader.Read();
             Assert.IsTrue(bookmarks.AllLinks.Any(l => string.Equals(l.Title, "Latest Headlines", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(l.FeedUrl)));
         }
+
+        [TestMethod]
+        public void InternalBookmarks_ff63()
+        {
+            var ffReader = new FirefoxBookmarksReader(_ff_v63_places) { IncludeInternal = true };
+            var links = ffReader.Read().GetAllItems<FirefoxBookmarkLink>();
+            var exampleLink = links.SingleOrDefault(f => f.Url == "http://example.org/");
+            Assert.IsNotNull(exampleLink);
+            Assert.AreEqual("Example Domain", exampleLink.Title);
+            Assert.AreEqual(new DateTime(2018, 12, 19), exampleLink.LastModified.Value.Date);
+            Assert.AreEqual(new DateTime(2018, 12, 19), exampleLink.Added.Value.Date);
+            Assert.AreEqual(false, exampleLink.Internal);
+        }
+
         [TestMethod]
         public void InternalBookmarks()
         {
@@ -57,8 +73,6 @@ namespace BookmarksManager.Tests
             var bookmarks = ffReader.Read();
             var dragdis = bookmarks.GetAllItems<FirefoxBookmarkLink>().First(l=>l.Title.StartsWith("Dragdis"));
             Assert.AreEqual("https://dragdis.com/", dragdis.Url);
-            Assert.AreEqual("image/png", dragdis.IconContentType);
-            Assert.IsTrue(dragdis.IconData != null);
         }
         [TestMethod]
         public void SpecificUserFolder()

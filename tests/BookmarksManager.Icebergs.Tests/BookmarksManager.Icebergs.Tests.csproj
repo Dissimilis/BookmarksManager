@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\BookmarksManager.Icebergs\BookmarksManager.Icebergs.csproj" />
     <ProjectReference Include="..\..\src\BookmarksManager\BookmarksManager.csproj" />
   </ItemGroup>
 
