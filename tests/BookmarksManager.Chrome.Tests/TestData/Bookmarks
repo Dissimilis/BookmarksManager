@@ -1,0 +1,71 @@
+{
+    "roots": {
+        "bookmark_bar": {
+            "children": [{
+                    "date_added": "13218362483976339",
+                    "guid": "697bbc42-d7e4-48a2-82d6-2fbe53ac0451",
+                    "id": "114",
+                    "name": "",
+                    "type": "url",
+                    "url": "https://github.com/sindresorhus/awesome"
+                }, {
+                    "date_added": "13186766040759862",
+                    "guid": "f8c678bc-dbfa-4694-92f1-46f58b34a38d",
+                    "id": "39",
+                    "meta_info": {
+                        "last_visited_desktop": "13203685990555643"
+                    },
+                    "name": "Parallelism models. Actors vs CSP vs Multithreading",
+                    "sync_transaction_version": "997",
+                    "type": "url",
+                    "url": "https://medium.com/@ostvp/parallelism-models-actors-vs-csp-vs-multithreading-f1bab1a2ed6b"
+                }, {
+                    "date_added": "13188047543832994",
+                    "guid": "737f550a-e90a-4136-9209-0f76aaa6745b",
+                    "id": "47",
+                    "meta_info": {
+                        "last_visited_desktop": "13203412967269025"
+                    },
+                    "name": "Cloud Design Patterns | Microsoft Docs",
+                    "sync_transaction_version": "986",
+                    "type": "url",
+                    "url": "https://docs.microsoft.com/en-us/azure/architecture/patterns/"
+                }, {
+                    "date_added": "13188047543832994",
+                    "guid": "737f550a-e90a-4136-9209-0f76aaa6741b",
+                    "id": "42",                    
+                    "name": "Foo Bar",
+                    "type": "url",
+                    "url": "https://example.org"
+                }
+            ],
+            "date_added": "13183152384368965",
+            "date_modified": "13220608279564759",
+            "guid": "00000000-0000-4000-A000-000000000002",
+            "id": "1",
+            "name": "Bookmarks bar",
+            "type": "folder"
+        },
+        "other": {
+            "children": [],
+            "date_added": "13183152384368982",
+            "date_modified": "0",
+            "guid": "00000000-0000-4000-A000-000000000003",
+            "id": "2",
+            "name": "Other bookmarks",
+            "type": "folder"
+        },
+        "sync_transaction_version": "1162",
+        "synced": {
+            "children": [],
+            "date_added": "13183152384368984",
+            "date_modified": "0",
+            "guid": "00000000-0000-4000-A000-000000000004",
+            "id": "3",
+            "name": "Mobile bookmarks",
+            "type": "folder"
+        }
+    },
+
+    "version": 1
+}

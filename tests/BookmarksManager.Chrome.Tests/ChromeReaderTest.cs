@@ -46,7 +46,8 @@ namespace BookmarksManager.Chrome.Tests
         [TestMethod]
         public void ChromeBookmarksFile()
         {
-            var bookmarksFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Google\\Chrome\\User Data\\Default\\Bookmarks");
+            var bookmarksFilePath = Path.GetFullPath("TestData\\Bookmarks");
+                //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Google\\Chrome\\User Data\\Default\\Bookmarks");
             using (var file = File.OpenRead(bookmarksFilePath))
             {
                 var container = _reader.Read(file);
