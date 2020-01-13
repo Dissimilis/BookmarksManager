@@ -18,9 +18,9 @@ namespace BookmarksManager.Tests
         [TestInitialize]
         public void Setup()
         {
-            _ff_v63_places = Path.GetFullPath("TestData\\ff63_places.sqlite");
-            _ff_v30_places = Path.GetFullPath("TestData\\ff30_places.sqlite");
-            _ff_v3_places = Path.GetFullPath("TestData\\ff3_places.sqlite");
+            _ff_v63_places = Path.GetFullPath("TestData/ff63_places.sqlite");
+            _ff_v30_places = Path.GetFullPath("TestData/ff30_places.sqlite");
+            _ff_v3_places = Path.GetFullPath("TestData/ff3_places.sqlite");
             //Assert.IsTrue(File.Exists(_ff_v30_places));
             //Assert.IsTrue(File.Exists(_ff_v3_places));
         }
