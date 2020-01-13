@@ -1,3 +1,5 @@
+![](https://github.com/dissimilis/BookmarksManager/workflows/.NET%20Core/badge.svg)
+
 BookmarksManager (simple .NET Standard lib for importing/exporting browser bookmarks)
 =============
 
