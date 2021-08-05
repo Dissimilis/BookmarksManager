@@ -4,10 +4,9 @@ namespace BookmarksManager
 {
     public static class DateTimeHelper
     {
-        public static int ToUnixTimestamp(this DateTime time)
+        public static long ToUnixTimestamp(this DateTime time)
         {
-            //todo: use DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            return (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc))).TotalSeconds;
+            return (long)((DateTimeOffset)time).ToUnixTimeSeconds();
         }
 
         public static DateTime? FromUnixTimeStamp(long? unixTimeStamp)
