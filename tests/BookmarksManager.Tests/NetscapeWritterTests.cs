@@ -135,5 +135,21 @@ namespace BookmarksManager.Tests
                 Assert.IsTrue(content.Contains(Convert.ToBase64String(randomBytes)));
             }
         }
+
+        [TestMethod]
+        public void DateTest()
+        {
+            var bookmarks = Helpers.GetSimpleStructure();
+            var testDate = new DateTime(2039, 01, 01, 12, 12, 12);
+            var unixTimeString = ((DateTimeOffset)testDate).ToUnixTimeSeconds().ToString();
+            bookmarks.Add(new BookmarkLink("http://example.com", "DateTest") {Added = testDate});
+            var writter = new NetscapeBookmarksWriter(bookmarks);
+            using (var stream = new MemoryStream())
+            {
+                writter.Write(stream);
+                var content = writter.OutputEncoding.GetString(stream.ToArray());
+                Assert.IsTrue(content.Contains($"ADD_DATE=\"{unixTimeString}\""));
+            }
+        }
     }
 }
