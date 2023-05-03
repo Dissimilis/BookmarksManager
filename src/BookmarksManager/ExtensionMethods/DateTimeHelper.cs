@@ -4,10 +4,9 @@ namespace BookmarksManager
 {
     public static class DateTimeHelper
     {
-        public static int ToUnixTimestamp(this DateTime time)
+        public static long ToUnixTimestamp(this DateTime time)
         {
-            //todo: use DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            return (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc))).TotalSeconds;
+            return (long)((DateTimeOffset)time).ToUnixTimeSeconds();
         }
 
         public static DateTime? FromUnixTimeStamp(long? unixTimeStamp)
@@ -15,7 +14,7 @@ namespace BookmarksManager
             if (!unixTimeStamp.HasValue || unixTimeStamp < 1)
                 return null;
             unixTimeStamp = takeNDigits(unixTimeStamp.Value, 10);
-            return new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds((double)unixTimeStamp);
+            return DateTimeOffset.FromUnixTimeSeconds((long)unixTimeStamp).UtcDateTime;
         }
 
         public static DateTime? FromUnixTimeStamp(string unixTimeStamp)
@@ -33,7 +32,7 @@ namespace BookmarksManager
                 return number;
             int numberOfDigits = (int)Math.Floor(Math.Log10(number) + 1);
             if (numberOfDigits >= n)
-                return (int)Math.Truncate((number / Math.Pow(10, numberOfDigits - n)));
+                return (long)Math.Truncate((number / Math.Pow(10, numberOfDigits - n)));
             else
                 return number;
         }
