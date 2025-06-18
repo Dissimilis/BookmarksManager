@@ -37,7 +37,7 @@ namespace BookmarksManager
                 return Encoding.GetEncoding("utf-7");
             }
 
-            //if number of zero bytes exeeds threshold, asume it's utf32 or utf16 content
+            //if number of zero bytes exceeds threshold, assume it's utf32 or utf16 content
             //this does not check for BigEndian
             var zeroBytesCnt = b.Count(x => x == 0);
             if (zeroBytesCnt > b.Length*0.5)

@@ -22,7 +22,7 @@
 
         /// <summary>
         /// Indicates if this is internal Firefox bookmark not created by user (i.e. Most visited, History, etc)
-        /// Tags, Unsorted bookmarks, Bookmarks toolbar and Bookmarks meny are not considered internal
+        /// Tags, Unsorted bookmarks, Bookmarks toolbar and Bookmarks menu are not considered internal
         /// </summary>
         public bool Internal { get; set; }
 

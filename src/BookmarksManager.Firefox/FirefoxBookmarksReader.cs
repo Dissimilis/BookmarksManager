@@ -50,7 +50,7 @@ namespace BookmarksManager.Firefox
         /// <summary>
         /// Reads from Firefox bookmarks database 
         /// </summary>
-        /// <returns>Boomarks container filled with bookmaks from Firefox db</returns>
+        /// <returns>Bookmarks container filled with bookmarks from Firefox db</returns>
         public virtual FirefoxBookmarkFolder Read()
         {
             using (var connection = new SQLiteConnection(string.Format(ConnectionStringTemplate, FilePath)))
