@@ -9,7 +9,7 @@ namespace BookmarksManager.Chrome
 {
 
     /// <summary>
-    /// Class reponsible for reading Chrome bookmarks
+    /// Class responsible for reading Chrome bookmarks
     /// It accepts JSON from Chrome API (as per https://developer.chrome.com/extensions/bookmarks#type-BookmarkTreeNode)
     /// As well as JSON from Chrome bookmarks file (%AppData%\Local\Google\Chrome\User Data\Default\bookmarks)
     /// </summary>
@@ -47,7 +47,7 @@ namespace BookmarksManager.Chrome
         }
 
         /// <summary>
-        /// Returns true if JSON content is from chrome bookmakrs file
+        /// Returns true if JSON content is from chrome bookmarks file
         /// </summary>
         protected virtual bool IsBookmarksFile(string json)
         {

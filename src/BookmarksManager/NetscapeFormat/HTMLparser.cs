@@ -828,7 +828,7 @@ namespace Majestic12
 
             EntityReverseLookup = new string[10000];
 
-            // calculate min/max lenght of known entities
+            // calculate min/max length of known entities
             foreach (var sKey in Entities.Keys)
             {
                 if (sKey.Length < MinEntityLen || MinEntityLen == 0)
@@ -1250,7 +1250,7 @@ namespace Majestic12
                         //sText.Append(cChar);
                         // NOTE: this is manual inlining from actual object
 
-                        // NOTE: we go here for speculative insertion that expectes that we won't run out of
+                        // NOTE: we go here for speculative insertion that expects that we won't run out of
                         // buffer, which should be big enough to hold most of HTML data.
                         /*
 							if(sText.iBufPos>=DynaString.TEXT_CAPACITY)
@@ -1401,7 +1401,7 @@ namespace Majestic12
                 }
                 cChar = NextChar();
 
-                // we are definately done
+                // we are definitely done
                 if (cChar == 0)
                     break;
 
@@ -1585,7 +1585,7 @@ namespace Majestic12
 
                 iChars++;
 
-                // we are definately done
+                // we are definitely done
                 if (cChar == 0)
                     break;
 

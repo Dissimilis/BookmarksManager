@@ -12,9 +12,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BookmarksManager.Tests
 {
     [TestClass]
-    public class NetscapeWritterTests
+    public class NetscapeWriterTests
     {
-        private readonly NetscapeBookmarksWriter _writter;
+        private readonly NetscapeBookmarksWriter _writer;
 
         private readonly Regex _headerRegex = new Regex(@"<!DOCTYPE\s+?NETSCAPE-BOOKMARK-FILE-\d+>.+?<TITLE.+?</TITLE>.+?<H1.+?</H1>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _folderTagsRegex = new Regex("dl><p", RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -23,10 +23,10 @@ namespace BookmarksManager.Tests
         private readonly Regex _h3Regex = new Regex("<H3>(.*?)</H3>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private readonly Regex _charsetRegex = new Regex(@"charset\s*=\s*([\w-]+)", RegexOptions.IgnoreCase);
 
-        public NetscapeWritterTests()
+        public NetscapeWriterTests()
         {
             var emptyContainer = new BookmarkFolder();
-            _writter = new NetscapeBookmarksWriter(emptyContainer);
+            _writer = new NetscapeBookmarksWriter(emptyContainer);
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
@@ -34,14 +34,14 @@ namespace BookmarksManager.Tests
         [TestMethod]
         public void ValidHeader()
         {
-            var result = _writter.ToString();
+            var result = _writer.ToString();
             Assert.IsTrue(_headerRegex.IsMatch(result));
         }
 
         [TestMethod]
         public void EmptyContainer()
         {
-            var result = _writter.ToString();
+            var result = _writer.ToString();
             var folderTagCnt = _folderTagsRegex.Matches(result).Count;
             var itemTags = _linkRegex.IsMatch(result);
             Assert.AreEqual(2, folderTagCnt);
@@ -51,8 +51,8 @@ namespace BookmarksManager.Tests
         [TestMethod]
         public void CharsetHeader()
         {
-            _writter.OutputEncoding = Encoding.UTF32;
-            var result = _writter.ToString();
+            _writer.OutputEncoding = Encoding.UTF32;
+            var result = _writer.ToString();
             var charsetMatch = _charsetRegex.Match(result);
             Assert.IsTrue(charsetMatch.Success);
             Assert.AreEqual(charsetMatch.Groups[1].Value, "utf-32", true);
@@ -62,8 +62,8 @@ namespace BookmarksManager.Tests
         public void SimpleStructureBasic()
         {
             var bookmarks = Helpers.GetSimpleStructure();
-            var writter = new NetscapeBookmarksWriter(bookmarks);
-            var result = writter.ToString();
+            var writer = new NetscapeBookmarksWriter(bookmarks);
+            var result = writer.ToString();
             var folderTagCnt = _folderTagsRegex.Matches(result).Count;
             var itemTagsCnt = _linkRegex.Matches(result).Count;
             var h3Cnt = _h3Regex.Matches(result).Count;
@@ -78,10 +78,10 @@ namespace BookmarksManager.Tests
         public void StreamWritting()
         {
             var encoding = Encoding.UTF32;
-            _writter.OutputEncoding = encoding;
+            _writer.OutputEncoding = encoding;
             using (var stream = new MemoryStream())
             {
-                _writter.Write(stream);
+                _writer.Write(stream);
                 var content = encoding.GetString(stream.ToArray());
                 Assert.IsTrue(_headerRegex.IsMatch(content));
             }
@@ -94,10 +94,10 @@ namespace BookmarksManager.Tests
             var bookmarks = Helpers.GetSimpleStructure();
             var unicodeStr = Helpers.RandomUnicodeString(10240);
             bookmarks.Add(new BookmarkLink("http://example.com", "Unicode title test: <" + unicodeStr));
-            var writter = new NetscapeBookmarksWriter(bookmarks) {OutputEncoding = encoding};
+            var writer = new NetscapeBookmarksWriter(bookmarks) {OutputEncoding = encoding};
             using (var stream = new MemoryStream())
             {
-                writter.Write(stream);
+                writer.Write(stream);
                 var content = encoding.GetString(stream.ToArray());
                 Assert.IsTrue(content.Contains("&lt;" + unicodeStr));
             }
@@ -109,10 +109,10 @@ namespace BookmarksManager.Tests
             var encoding = Encoding.GetEncoding(1257);
             var bookmarks = Helpers.GetSimpleStructure();
             bookmarks.Add(new BookmarkLink("http://example.com", "ASCII title test: ƒ ąčęėįšųūĄŪ"));
-            var writter = new NetscapeBookmarksWriter(bookmarks) {OutputEncoding = encoding};
+            var writer = new NetscapeBookmarksWriter(bookmarks) {OutputEncoding = encoding};
             using (var stream = new MemoryStream())
             {
-                writter.Write(stream);
+                writer.Write(stream);
                 var content = encoding.GetString(stream.ToArray());
                 Assert.IsTrue(content.Contains("? ąčęėįšųūĄŪ"));
                 content = Encoding.UTF8.GetString(stream.ToArray());
@@ -126,11 +126,11 @@ namespace BookmarksManager.Tests
             var bookmarks = Helpers.GetSimpleStructure();
             var randomBytes = Encoding.UTF8.GetBytes(Helpers.RandomUnicodeString(4096));
             bookmarks.Add(new BookmarkLink("http://example.com", "<\">") {IconContentType = "image/png", IconData = randomBytes});
-            var writter = new NetscapeBookmarksWriter(bookmarks);
+            var writer = new NetscapeBookmarksWriter(bookmarks);
             using (var stream = new MemoryStream())
             {
-                writter.Write(stream);
-                var content = writter.OutputEncoding.GetString(stream.ToArray());
+                writer.Write(stream);
+                var content = writer.OutputEncoding.GetString(stream.ToArray());
                 Assert.IsTrue(content.Contains("data:image/png;base64,"));
                 Assert.IsTrue(content.Contains(Convert.ToBase64String(randomBytes)));
             }
@@ -143,11 +143,11 @@ namespace BookmarksManager.Tests
             var testDate = new DateTime(2039, 01, 01, 12, 12, 12);
             var unixTimeString = ((DateTimeOffset)testDate).ToUnixTimeSeconds().ToString();
             bookmarks.Add(new BookmarkLink("http://example.com", "DateTest") {Added = testDate});
-            var writter = new NetscapeBookmarksWriter(bookmarks);
+            var writer = new NetscapeBookmarksWriter(bookmarks);
             using (var stream = new MemoryStream())
             {
-                writter.Write(stream);
-                var content = writter.OutputEncoding.GetString(stream.ToArray());
+                writer.Write(stream);
+                var content = writer.OutputEncoding.GetString(stream.ToArray());
                 Assert.IsTrue(content.Contains($"ADD_DATE=\"{unixTimeString}\""));
             }
         }
