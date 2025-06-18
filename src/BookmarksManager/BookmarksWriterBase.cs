@@ -16,8 +16,8 @@ namespace BookmarksManager
         }
 
         /// <summary>
-        ///     Writes bookmarks to provided TextWritter. BookmarksWriter output encoding is not used in this method, you must
-        ///     create TextWriter with correct encoding
+        ///     Writes bookmarks to provided TextWriter. BookmarksWriter output encoding is not used in this method, you must
+        ///     create <see cref="TextWriter"/> with correct encoding
         /// </summary>
         protected abstract void Write(TextWriter outputTextWriter);
 

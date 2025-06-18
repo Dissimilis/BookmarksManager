@@ -52,3 +52,12 @@ using (var file = File.Open("path_to_file", FileMode.Create))
     writer.Write(file);
 }
 ```
+
+## Building and testing
+
+The solution targets .NET 8.0. With the [.NET SDK](https://dotnet.microsoft.com/download) installed you can build and run all tests:
+
+```bash
+dotnet build
+dotnet test
+```
