@@ -10,9 +10,9 @@
     <PackageProjectUrl>https://github.com/Dissimilis/BookmarksManager</PackageProjectUrl>
     <Description>Library for handling browsers bookmarks (supports Netscape bookmarks format)</Description>
     <PackageTags>netscape;bookmarks;bookmark;favorites</PackageTags>
-    <PackageReleaseNotes>Ported to netstandard1.6; 
-Minor bugfixes; 
-Braking change: NetscapeBookmarksWritter renamed to NetscapeBookmarksWriter; </PackageReleaseNotes>
+    <PackageReleaseNotes>Ported to netstandard1.6;
+Minor bugfixes;
+Breaking change: NetscapeBookmarksWritter renamed to NetscapeBookmarksWriter; </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/Dissimilis/BookmarksManager</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryBranch>master</RepositoryBranch>
