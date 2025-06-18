@@ -42,7 +42,7 @@ namespace BookmarksManager.Firefox
                 case "Close":
                     _baseReader.Close();
                     break;
-                case "Dispose()":
+                case "Dispose":
                     _baseReader.Dispose();
                     break;
             }
