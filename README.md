@@ -40,14 +40,14 @@ var bookmarks = new BookmarkFolder()
 {
     new BookmarkLink("http://example.com", "Example")
 };
-var writter = new NetscapeBookmarksWritter(bookmarks);
+var writer = new NetscapeBookmarksWriter(bookmarks);
 
-Console.WriteLine(writter.ToString());
+Console.WriteLine(writer.ToString());
 
-//supports writting to stream with custom encoding
-writter.OutputEncoding = Encoding.GetEncoding(1257);
+//supports writing to stream with custom encoding
+writer.OutputEncoding = Encoding.GetEncoding(1257);
 using (var file = File.OpenWrite("path_to_file"))
 {
-    writter.Write(file);
+    writer.Write(file);
 }
 ```
