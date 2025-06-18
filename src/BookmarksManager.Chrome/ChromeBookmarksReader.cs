@@ -96,10 +96,15 @@ namespace BookmarksManager.Chrome
 
         private DateTime? parseTimeStamp(long? timeStamp)
         {
-            //http://fileformats.archiveteam.org/wiki/Chrome_bookmarks
+            // http://fileformats.archiveteam.org/wiki/Chrome_bookmarks
+            // Chrome stores timestamps as the number of microseconds
+            // since 1601-01-01 UTC. DateTime.FromFileTime interprets
+            // the value as local time which breaks conversions on
+            // systems not running in UTC. Use the UTC variant to
+            // preserve correct timestamp values.
             if (timeStamp == null)
                 return null;
-            return DateTime.FromFileTime(timeStamp.Value*10);
+            return DateTime.FromFileTimeUtc(timeStamp.Value * 10);
         }
 
     }
