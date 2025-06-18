@@ -46,7 +46,8 @@ Console.WriteLine(writer.ToString());
 
 //supports writing to stream with custom encoding
 writer.OutputEncoding = Encoding.GetEncoding(1257);
-using (var file = File.OpenWrite("path_to_file"))
+// Use FileMode.Create to overwrite existing files and avoid leftover content
+using (var file = File.Open("path_to_file", FileMode.Create))
 {
     writer.Write(file);
 }
