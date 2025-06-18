@@ -233,7 +233,7 @@ namespace BookmarksManager.Firefox
             };
             if (row.Id == bookmarksToolbarId)
             {
-                folder.IsBoomarksToolbar = true;
+                folder.IsBookmarksToolbar = true;
                 folder.Attributes.Add("personal_toolbar_folder", "true");
             }
             if (row.Attributes != null)

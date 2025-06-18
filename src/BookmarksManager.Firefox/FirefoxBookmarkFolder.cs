@@ -11,9 +11,9 @@
         public string Description { get; set; }
 
         /// <summary>
-        /// Indicates if this folder is displayed in Firefox bookmarks toolbar 
+        /// Indicates if this folder is displayed in Firefox bookmarks toolbar
         /// </summary>
-        public bool IsBoomarksToolbar { get; set; }
+        public bool IsBookmarksToolbar { get; set; }
 
         /// <summary>
         /// Internal Firefox bookmarks type (menu,tags,unfiled,toolbar)
